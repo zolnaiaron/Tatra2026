@@ -8,7 +8,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/gagalin" rel="stylesheet">
     
-    <!-- Az első háttérképet érdemes előtölteni -->
     <link rel="preload" as="image" href="images/hatter1.jpg">
 
     <style>
@@ -209,6 +208,7 @@
 
         input[type="text"],
         input[type="tel"],
+        input[type="email"],
         textarea {
             width: 100%;
             padding: 15px;
@@ -224,6 +224,7 @@
 
         input[type="text"]:focus,
         input[type="tel"]:focus,
+        input[type="email"]:focus,
         textarea:focus {
             border-color: #4a90e2;
             background: rgba(0, 0, 0, 0.6);
@@ -322,7 +323,6 @@
         <div class="intro-text">Tátra 2026</div>
     </div>
 
-    <!-- HÁTTÉR KÉPEK (Ide is tedd vissza a saját képeidet) -->
     <div class="background-container" id="bgContainer">
         <div id="bg1" class="background-image"></div>
         <div id="bg2" class="background-image"></div>
@@ -332,7 +332,6 @@
     <div class="content">
         <h1>Tátra 2026</h1>
 
-        <!-- BEVEZETŐ KÁRTYA -->
         <div class="glass-panel intro-box">
             <p><strong>Sziasztok!</strong></p>
             <p>Idén a magaslatokba törünk: az ifitábor a Tátrában lesz! Készüljetek a hegymászásra, a jó levegőre és arra, hogy valószínűleg jobban elfáradunk, mint az év többi részében összesen, de megéri! Ne hagyd ki az év legütősebb túráját!</p>
@@ -345,13 +344,17 @@
             </ul>
         </div>
 
-        <!-- REGISZTRÁCIÓS ŰRLAP -->
         <div class="glass-panel">
             <form action="https://formspree.io/f/xjgddpkk" method="POST">
                 
                 <div class="form-group">
                     <label for="name">Mi a neved? *</label>
                     <input type="text" id="name" name="Név" placeholder="Vezeték- és keresztnév" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Mi az e-mail címed? (Ide küldjük a visszaigazolást) *</label>
+                    <input type="email" id="email" name="email" placeholder="pelda@email.hu" required>
                 </div>
 
                 <div class="form-group">
@@ -385,7 +388,6 @@
                     <textarea id="allergy" name="Érzékenység" placeholder="(pl. laktóz, mogyoró, glutén... ha nincs, hagyd üresen)"></textarea>
                 </div>
 
-                <!-- Új: Fizetési mód rádiógombokkal -->
                 <div class="form-group">
                     <label>Milyen fizetési módot választasz? *</label>
                     <div class="radio-group">
@@ -398,7 +400,6 @@
                     </div>
                 </div>
 
-                <!-- Új: Támogatás mező -->
                 <div class="form-group">
                     <label for="support">Tudnád-e támogatni a tábort a tábordíjon felül? Ha igen, mennyivel?</label>
                     <input type="text" id="support" name="Támogatás" placeholder="pl. 5000 Ft (Opcionális)">
