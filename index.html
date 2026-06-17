@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alpok 2026 – Program</title>
+    <title>Tátra 2026 – Regisztráció</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/gagalin" rel="stylesheet">
+    
+    <!-- Az első háttérképet érdemes előtölteni -->
     <link rel="preload" as="image" href="images/hatter1.jpg">
 
     <style>
@@ -14,10 +16,8 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            cursor: default;
         }
 
-        /* --- AZ ALAPÉRTELMEZETT SZÜRKE GÖRGETŐSÁV TELJES ELTÜNTETÉSE --- */
         html, body {
             -ms-overflow-style: none;  
             scrollbar-width: none;  
@@ -37,7 +37,7 @@
             overflow-x: hidden;
         }
 
-        /* --- FILMES INTRO KÉPERNYŐ BELESÜPPEDŐ EFFEKTTEL --- */
+        /* --- FILMES INTRO KÉPERNYŐ --- */
         #intro-screen {
             position: fixed;
             top: 0;
@@ -56,7 +56,7 @@
             left: 50%;
             transform: translate(-50%, -50%);
             font-family: 'Gagalin', sans-serif;
-            font-size: 10rem;
+            font-size: 8rem; 
             color: #ffffff;
             letter-spacing: 6px;
             white-space: nowrap;
@@ -68,31 +68,11 @@
             0% { top: 50%; transform: translate(-50%, -50%) scale(0.9); filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.8)) blur(10px); opacity: 0; }
             15% { top: 50%; transform: translate(-50%, -50%) scale(1); filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.8)) blur(0px); opacity: 1; }
             50% { top: 50%; transform: translate(-50%, -50%) scale(1); filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.8)) blur(0px); opacity: 1; }
-            85% {
-                top: 72px; 
-                transform: translate(-50%, -50%) scale(0.4);
-                opacity: 1;
-            }
-            100% {
-                top: 72px;
-                transform: translate(-50%, -50%) scale(0.4);
-                opacity: 0; 
-            }
+            85% { top: 72px; transform: translate(-50%, -50%) scale(0.4); opacity: 1; }
+            100% { top: 72px; transform: translate(-50%, -50%) scale(0.4); opacity: 0; }
         }
 
-        /* --- VÉKONY OLDALSÓ GÖRGETÉS-JELZŐ (PROGRESS BAR) --- */
-        #scrollProgressBar {
-            position: fixed;
-            top: 0;
-            right: 0; 
-            width: 3px; 
-            height: 0%; 
-            background: linear-gradient(to bottom, #4a90e2, #ffffff); 
-            z-index: 9999;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
-        }
-
-        /* Háttér animáció konténer */
+        /* --- HÁTTÉR ANIMÁCIÓ KONTÉNER --- */
         .background-container {
             position: fixed;
             top: 0;
@@ -130,34 +110,28 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.4); 
+            background: rgba(0,0,0,0.5); 
             z-index: 1;
         }
 
-        /* Fő tartalom tartó */
+        /* --- TARTALOM --- */
         .content {
             position: relative;
             z-index: 2;
             width: 100%;
-            max-width: 800px;
+            max-width: 700px;
             margin: 0 auto;
-            padding: 40px 20px;
+            padding: 60px 20px 100px 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
-        }
-
-        /* --- A VÉGLEGES FŐCÍM --- */
-        @keyframes h1-fade-in {
-            0% { opacity: 0; }
-            100% { opacity: 1; }
         }
 
         h1 {
             font-family: 'Gagalin', sans-serif;
             font-weight: normal; 
             font-size: 4rem;
-            margin-bottom: 15px;
+            margin-bottom: 30px;
             text-align: center;
             letter-spacing: 4px;
             background: linear-gradient(to right, #ffffff 0%, #d0d5da 50%, #ffffff 100%);
@@ -165,174 +139,190 @@
             -webkit-text-fill-color: transparent;
             filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.8));
             opacity: 0; 
-            animation: h1-fade-in 0.4s ease forwards;
+            animation: fade-in 0.4s ease forwards;
             animation-delay: 3.8s; 
         }
 
-        /* --- LÉLEGZŐ VISSZASZÁMLÁLÓ --- */
-        @keyframes pulse-glow {
-            0%, 100% { box-shadow: 0 8px 32px rgba(0,0,0,0.4); transform: scale(1); }
-            50% { box-shadow: 0 8px 32px rgba(255, 255, 255, 0.2), 0 0 20px rgba(255, 255, 255, 0.3); transform: scale(1.02); }
-        }
-
-        .countdown-container {
-            background: rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(4px); 
-            -webkit-backdrop-filter: blur(4px);
-            padding: 15px 30px;
-            border-radius: 50px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            margin-bottom: 40px;
-            animation: pulse-glow 4s infinite ease-in-out;
-            min-width: 360px;
-            text-align: center;
-        }
-
-        .countdown {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: #ffffff;
-            text-shadow: 0 2px 8px rgba(0,0,0,0.6);
-            font-variant-numeric: tabular-nums;
-        }
-
-        /* --- Különálló üvegkártyák minden napnak --- */
-        .day-section { 
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(8px); 
-            -webkit-backdrop-filter: blur(8px);
+        /* Üvegkártya stílus */
+        .glass-panel { 
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px); 
+            -webkit-backdrop-filter: blur(12px);
             border-radius: 20px;
-            padding: 30px 40px;
+            padding: 40px;
             width: 100%;
             border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-            margin-bottom: 40px; 
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+            margin-bottom: 30px; 
+            opacity: 0;
+            animation: fade-in-up 0.8s ease forwards;
+            animation-delay: 4s;
         }
 
-        h2 {
-            font-size: 1.8rem;
-            color: #ffffff;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-            margin-bottom: 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-            padding-bottom: 10px;
-        }
-
-        /* --- PROGRAM PONTOK ELRENDEZÉSE ÉS LINK STÍLUSOK --- */
-        .program-item {
-            display: flex;
-            align-items: flex-start; 
-            gap: 25px; 
-            margin-bottom: 10px;
+        .intro-box p {
             line-height: 1.6;
-            padding: 12px;
-            border-radius: 12px;
-            transition: all 0.3s ease;
-            border: 1px solid transparent;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
         }
 
-        /* Ha a program-item egy link (<a> tag), távolítsuk el az aláhúzást és állítsuk be a színt */
-        a.program-item {
-            text-decoration: none;
-            color: inherit;
-            cursor: pointer;
-        }
-        
-        /* A linkszerű dobozokban minden elem legyen pointer kurzoros */
-        a.program-item * {
-            cursor: pointer;
+        .intro-box ul {
+            list-style: none;
+            margin-bottom: 20px;
+            padding-left: 0;
         }
 
-        .program-item:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: translateX(8px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-
-        /* --- ÉPPEN AKTUÁLIS PROGRAMPONT STÍLUSA --- */
-        .program-item.active-now {
-            background: rgba(46, 204, 113, 0.25); /* Átlátszó világoszöld */
-            border: 1px solid rgba(46, 204, 113, 0.5);
-            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.2);
-        }
-
-        .program-item.active-now:hover {
-            background: rgba(46, 204, 113, 0.35);
-        }
-
-        .time {
-            font-weight: 700;
-            min-width: 135px; 
-            color: rgba(255,255,255,0.9); 
-        }
-
-        .desc { flex: 1; }
-
-        .sub-info {
-            font-size: 0.9rem;
-            color: rgba(255,255,255,0.7);
-            font-style: italic;
-        }
-
-        .list-container { margin-top: 10px; }
-        .list-container ul { list-style: none; }
-        .list-container li {
-            margin-bottom: 12px;
+        .intro-box li {
+            margin-bottom: 10px;
             padding-left: 25px;
             position: relative;
-            transition: transform 0.3s ease;
         }
-        .list-container li:hover {
-            transform: translateX(5px);
-        }
-        .list-container li::before {
-            content: "✓";
+
+        .intro-box li::before {
+            content: "🏔️";
             position: absolute;
             left: 0;
-            color: #ffffff; 
+            top: 0;
+        }
+
+        .intro-box a {
+            color: #4a90e2;
+            text-decoration: none;
             font-weight: bold;
         }
-
-        /* --- SCROLL REVEAL ANIMÁCIÓ --- */
-        .reveal {
-            opacity: 0;
-            transform: translateY(40px);
-            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        
+        .intro-box a:hover {
+            text-decoration: underline;
         }
 
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
+        /* --- ŰRLAP STÍLUSOK --- */
+        .form-group {
+            margin-bottom: 25px;
         }
 
-        /* --- MOBIL NÉZET BEÁLLÍTÁSAI --- */
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 700;
+            font-size: 1rem;
+            color: rgba(255,255,255,0.9);
+        }
+
+        input[type="text"],
+        input[type="tel"],
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.3);
+            background: rgba(0, 0, 0, 0.4);
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        input[type="text"]:focus,
+        input[type="tel"]:focus,
+        textarea:focus {
+            border-color: #4a90e2;
+            background: rgba(0, 0, 0, 0.6);
+            box-shadow: 0 0 10px rgba(74, 144, 226, 0.3);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Checkbox és Rádiógomb stílusok */
+        .checkbox-group, .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .checkbox-label, .radio-label {
+            display: flex;
+            align-items: center;
+            font-weight: 400;
+            cursor: pointer;
+            padding: 10px 15px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.05);
+            transition: background 0.2s ease;
+        }
+
+        .checkbox-label:hover, .radio-label:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .checkbox-label input[type="checkbox"], 
+        .radio-label input[type="radio"] {
+            margin-right: 15px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #4a90e2; 
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 18px;
+            font-family: 'Gagalin', sans-serif;
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+            color: #fff;
+            background: linear-gradient(135deg, #4a90e2, #0056b3);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
+            margin-top: 10px;
+        }
+
+        button[type="submit"]:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 123, 255, 0.6);
+        }
+
+        button[type="submit"]:active {
+            transform: translateY(1px);
+        }
+
+        /* --- ANIMÁCIÓK --- */
+        @keyframes fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fade-in-up {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         @media (max-width: 600px) {
-            .intro-text { font-size: 5rem; }
+            .intro-text { font-size: 4rem; }
             @keyframes sink-anim {
-                0% { top: 50%; transform: translate(-50%, -50%) scale(0.9); filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.8)) blur(10px); opacity: 0; }
-                15% { top: 50%; transform: translate(-50%, -50%) scale(1); filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.8)) blur(0px); opacity: 1; }
-                50% { top: 50%; transform: translate(-50%, -50%) scale(1); filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.8)) blur(0px); opacity: 1; }
+                0% { top: 50%; transform: translate(-50%, -50%) scale(0.9); opacity: 0; }
+                15% { top: 50%; transform: translate(-50%, -50%) scale(1); opacity: 1; }
+                50% { top: 50%; transform: translate(-50%, -50%) scale(1); opacity: 1; }
                 85% { top: 60px; transform: translate(-50%, -50%) scale(0.56); opacity: 1; }
                 100% { top: 60px; transform: translate(-50%, -50%) scale(0.56); opacity: 0; }
             }
-            h1 { font-size: 2.8rem; }
-            .countdown-container { min-width: 300px; }
-            .countdown { font-size: 1.1rem; }
-            .day-section { padding: 25px 20px; }
-            .program-item { flex-direction: column; gap: 5px; margin-bottom: 15px; }
-            .time { min-width: auto; }
+            h1 { font-size: 2.5rem; margin-top: 20px; }
+            .glass-panel { padding: 25px 20px; }
         }
     </style>
 </head>
 <body>
 
     <div id="intro-screen">
-        <div class="intro-text">Alpok 2026</div>
+        <div class="intro-text">Tátra 2026</div>
     </div>
 
-    <div id="scrollProgressBar"></div>
-
+    <!-- HÁTTÉR KÉPEK (Ide is tedd vissza a saját képeidet) -->
     <div class="background-container" id="bgContainer">
         <div id="bg1" class="background-image"></div>
         <div id="bg2" class="background-image"></div>
@@ -340,150 +330,84 @@
     <div class="overlay"></div>
 
     <div class="content">
-        <h1>Alpok 2026</h1>
-        <div class="countdown-container">
-            <div class="countdown" id="countdown">Betöltés...</div>
+        <h1>Tátra 2026</h1>
+
+        <!-- BEVEZETŐ KÁRTYA -->
+        <div class="glass-panel intro-box">
+            <p><strong>Sziasztok!</strong></p>
+            <p>Idén a magaslatokba törünk: az ifitábor a Tátrában lesz! Készüljetek a hegymászásra, a jó levegőre és arra, hogy valószínűleg jobban elfáradunk, mint az év többi részében összesen, de megéri! Ne hagyd ki az év legütősebb túráját!</p>
+            
+            <ul>
+                <li><strong>Időpont:</strong> Augusztus 9-13.</li>
+                <li><strong>Díj:</strong> 30.000 Ft</li>
+                <li><strong>Helyszín:</strong> <a href="https://maps.app.goo.gl/vitRoPHTbitG6w636" target="_blank">Google Maps link itt</a></li>
+                <li><strong>Utazás:</strong> Együtt megyünk kocsikkal! (Részleteket tábor előtt 2-3 héttel beszéljük meg. Ha nagyon gáz a helyzet, a vonat is jó opció lesz.)</li>
+            </ul>
         </div>
 
-        <section class="day-section">
-            <h2>Április 30. Csütörtök</h2>
-            
-            <a href="https://www.cento.ro/Transport/Marghita-Oradea" target="_blank" class="program-item" data-start="2026-04-30T08:00:00" data-end="2026-04-30T09:05:00">
-                <time class="time">08:00 – 09:05</time>
-                <div class="desc">Marghitta → Oradea <br><span class="sub-info">(Cento busz: utolsó megálló = Autogara Intrans SA)</span></div>
-            </a>
-            
-            <a href="https://shop.flixbus.hu/search?departureCity=90805912-40f3-4c45-b288-15146d54689d&arrivalCity=40de6527-8646-11e6-9066-549f350fcb0c&route=Nagyv%C3%A1rad-Budapest&rideDate=30.04.2026&adult=1&_locale=hu&departureCountryCode=RO&arrivalCountryCode=HU&features%5Bfeature.enable_distribusion%5D=1&features%5Bfeature.train_cities_only%5D=0&features%5Bfeature.station_search%5D=0&features%5Bfeature.station_search_recommendation%5D=0&features%5Bfeature.darken_page%5D=1" target="_blank" class="program-item" data-start="2026-04-30T10:15:00" data-end="2026-04-30T13:25:00">
-                <time class="time">10:15 – 13:25</time>
-                <div class="desc">Oradea → Budapest Népliget (FlixBus)</div>
-            </a>
-            
-            <a href="https://www.google.com/maps/place/Cafe+Podma/@47.5083939,19.0567586,18.8z/data=!4m6!3m5!1s0x4741dc12a842c11b:0xfa04eaee68fa8a07!8m2!3d47.5081521!4d19.0566742!16s%2Fg%2F1tdrd48x?entry=ttu&g_ep=EgoyMDI2MDQyMi4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="program-item" data-start="2026-04-30T13:25:00" data-end="2026-04-30T15:00:00">
-                <time class="time">14:00 után</time>
-                <div class="desc">kávézás / könnyű étkezés</div>
-            </a>
-            
-            <div class="program-item" data-start="2026-04-30T15:00:00" data-end="2026-04-30T16:20:00">
-                <time class="time">15:00 – 16:00</time>
-                <div class="desc">Meglepetés program ✨</div>
-            </div>
-            
-            <a href="https://www.google.com/maps/place/Burger+King+%C3%9Ajpest/@47.5602074,19.0879479,17z/data=!3m1!4b1!4m6!3m5!1s0x4741da365948853f:0x44ee77d2d69bf135!8m2!3d47.5602074!4d19.0905228!16s%2Fg%2F1pp2wwzl4?authuser=0&entry=ttu&g_ep=EgoyMDI2MDQyMi4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="program-item" data-start="2026-04-30T16:20:00" data-end="2026-04-30T16:50:00">
-                <time class="time">16:20 – 16:50</time>
-                <div class="desc">Burger King</div>
-            </a>
-            
-            <a href="Menetrendek.hu - Helyközi menetrendi kereső - 419.pdf" target="_blank" class="program-item" data-start="2026-04-30T17:00:00" data-end="2026-04-30T18:00:00">
-                <time class="time">17:00 – 18:00</time>
-                <div class="desc">Budapest → Őrbottyán (busz)</div>
-            </a>
-            
-            <div class="program-item" data-start="2026-04-30T18:00:00" data-end="2026-04-30T20:00:00">
-                <time class="time">18:00 – 20:00</time>
-                <div class="desc">Érkezés, pihenés, család, beszélgetés</div>
-            </div>
-            
-            <div class="program-item" data-start="2026-04-30T20:00:00" data-end="2026-04-30T23:00:00">
-                <time class="time">20:00 – 22:30</time>
-                <div class="desc">Filmnézés 🍿</div>
-            </div>
-            
-            <div class="program-item" data-start="2026-04-30T23:00:00" data-end="2026-05-01T06:30:00">
-                <time class="time">23:00</time>
-                <div class="desc">Alvás</div>
-            </div>
-        </section>
+        <!-- REGISZTRÁCIÓS ŰRLAP -->
+        <div class="glass-panel">
+            <form action="https://formspree.io/f/xjgddpkk" method="POST">
+                
+                <div class="form-group">
+                    <label for="name">Mi a neved? *</label>
+                    <input type="text" id="name" name="Név" placeholder="Vezeték- és keresztnév" required>
+                </div>
 
-        <section class="day-section">
-            <h2>Május 1. Péntek</h2>
-            <div class="program-item" data-start="2026-05-01T06:30:00" data-end="2026-05-01T07:15:00">
-                <time class="time">06:30</time>
-                <div class="desc">Ébredés</div>
-            </div>
-            <div class="program-item" data-start="2026-05-01T07:15:00" data-end="2026-05-01T08:00:00">
-                <time class="time">07:15</time>
-                <div class="desc">Reggeli</div>
-            </div>
-            <div class="program-item" data-start="2026-05-01T08:00:00" data-end="2026-05-01T11:30:00">
-                <time class="time">08:00</time>
-                <div class="desc">Indulás <span class="sub-info">(késés esélyes)</span></div>
-            </div>
-            <div class="program-item" data-start="2026-05-01T11:30:00" data-end="2026-05-01T15:00:00">
-                <time class="time">11:30</time>
-                <div class="desc">Megálló Sopronban – vásárlás, ebéd lehetősége</div>
-            </div>
-            
-            <a href="https://www.google.com/maps/place/Camping+Freizeitsee+Zenz/@47.5065384,15.072506,17z/data=!3m1!4b1!4m6!3m5!1s0x4771e5b1f6105d59:0x75dd06bb007eafe!8m2!3d47.5065384!4d15.0750809!16s%2Fg%2F1tjymjgz!5m1!1e4?entry=ttu&g_ep=EgoyMDI2MDQyMi4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="program-item" data-start="2026-05-01T15:00:00" data-end="2026-05-01T16:00:00">
-                <time class="time">15:00 körül</time>
-                <div class="desc">Érkezés a kempinghez 🏕️</div>
-            </a>
-            
-            <div class="program-item" data-start="2026-05-01T16:00:00" data-end="2026-05-01T23:59:59">
-                <time class="time">Délután</time>
-                <div class="desc">Szabad program</div>
-            </div>
-        </section>
+                <div class="form-group">
+                    <label for="phone">Telefonszám *</label>
+                    <input type="tel" id="phone" name="Telefonszám" placeholder="+36201234567" required>
+                </div>
 
-        <section class="day-section">
-            <h2>Május 2. Szombat</h2>
-            <div class="program-item" data-start="2026-05-02T07:30:00" data-end="2026-05-02T08:52:00">
-                <time class="time">07:30</time>
-                <div class="desc">Ébredés, pakolás, reggeli</div>
-            </div>
-            
-            <a href="Pichl-Großdorf Kirche › Tragöß-Oberort Grüner See (Seestraße_Parkplatz).pdf" target="_blank" class="program-item" data-start="2026-05-02T08:52:00" data-end="2026-05-02T09:00:00">
-                <time class="time">08:52 – 08:59</time>
-                <div class="desc">Pichl-Grossdorf → Oberort (Grüner See)</div>
-            </a>
-            
-            <a href="https://www.bergfex.at/sommer/steiermark/touren/wanderung/677774,ueber-den-hochturm-2080m-mit-blick-auf-den-gruenen-see--rundwanderweg--oberort/" target="_blank" class="program-item" data-start="2026-05-02T09:00:00" data-end="2026-05-02T18:00:00">
-                <time class="time">09:00</time>
-                <div class="desc"><strong>Kirándulás indul</strong> 🏔️</div>
-            </a>
-            
-            <div class="program-item" data-start="2026-05-02T18:00:00" data-end="2026-05-02T19:00:00">
-                <time class="time">19:00-ig</time>
-                <div class="desc">Visszaérkezés legkésőbb</div>
-            </div>
-            <div class="program-item" data-start="2026-05-02T19:00:00" data-end="2026-05-02T23:59:59">
-                <time class="time">Este</time>
-                <div class="desc">Vacsora, fürdés a tóban, nagy beszélgetések</div>
-            </div>
-        </section>
+                <div class="form-group">
+                    <label>Melyik napokon alszol ott?</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="Napok[]" value="Augusztus 9."> Augusztus 9. (Vasárnap)
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="Napok[]" value="Augusztus 10."> Augusztus 10. (Hétfő)
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="Napok[]" value="Augusztus 11."> Augusztus 11. (Kedd)
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="Napok[]" value="Augusztus 12."> Augusztus 12. (Szerda)
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="Napok[]" value="Augusztus 13."> Augusztus 13. (Csütörtök)
+                        </label>
+                    </div>
+                </div>
 
-        <section class="day-section">
-            <h2>Május 3. Vasárnap</h2>
-            <div class="program-item" data-start="2026-05-03T08:00:00" data-end="2026-05-03T09:00:00">
-                <time class="time">08:00</time>
-                <div class="desc">Ébredés, közös reggeli</div>
-            </div>
-            <div class="program-item" data-start="2026-05-03T09:00:00" data-end="2026-05-03T10:00:00">
-                <time class="time">09:00</time>
-                <div class="desc">Sátorbontás, pakolás</div>
-            </div>
-            <div class="program-item" data-start="2026-05-03T10:00:00" data-end="2026-05-03T17:40:00">
-                <time class="time">10:00</time>
-                <div class="desc">Indulás haza</div>
-            </div>
-            
-            <a href="Menetrendek.hu - Helyközi menetrendi kereső - 420.pdf" target="_blank" class="program-item" data-start="2026-05-03T17:40:00" data-end="2026-05-03T21:13:00">
-                <time class="time">17:40 – 21:13</time>
-                <div class="desc">Budapest Keleti → Nyírábrány <br><span class="sub-info">(román idő szerint érkezés: 22:13)</span></div>
-            </a>
-            
-        </section>
+                <div class="form-group">
+                    <label for="allergy">Van-e bármi érzékenység, amire oda kell figyelni?</label>
+                    <textarea id="allergy" name="Érzékenység" placeholder="(pl. laktóz, mogyoró, glutén... ha nincs, hagyd üresen)"></textarea>
+                </div>
 
-        <section class="day-section list-container">
-            <h2>Mit hozz magaddal?</h2>
-            <ul>
-                <li>Kényelmes ruhák</li>
-                <li><strong>Túrázós ruha, túracipő (a legfontosabb!)</strong></li>
-                <li>Matrac, hálózsák</li>
-                <li>Fürdőruha, törölköző (a tóban fürdéshez)</li>
-                <li>Pizsama (az unikornisos is jöhet!)</li>
-                <li>Fogkefe, tisztálkodási szerek</li>
-            </ul>
-        </section>
+                <!-- Új: Fizetési mód rádiógombokkal -->
+                <div class="form-group">
+                    <label>Milyen fizetési módot választasz? *</label>
+                    <div class="radio-group">
+                        <label class="radio-label">
+                            <input type="radio" name="Fizetési_mód" value="Készpénzes fizetés" required> Készpénzes fizetés
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="Fizetési_mód" value="Banki átutalás" required> Banki átutalás
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Új: Támogatás mező -->
+                <div class="form-group">
+                    <label for="support">Tudnád-e támogatni a tábort a tábordíjon felül? Ha igen, mennyivel?</label>
+                    <input type="text" id="support" name="Támogatás" placeholder="pl. 5000 Ft (Opcionális)">
+                </div>
+
+                <button type="submit">Jelentkezem!</button>
+            </form>
+        </div>
+
     </div>
 
     <script>
@@ -492,62 +416,11 @@
         setTimeout(() => { introScreen.style.backgroundColor = "rgba(0, 0, 0, 0)"; }, 2000);
         setTimeout(() => { introScreen.style.display = "none"; }, 4500);
 
-        // --- VISSZASZÁMLÁLÓ ---
-        const targetDate = new Date("2026-04-30T13:25:00").getTime();
-        const countdownElement = document.getElementById("countdown");
-
-        function updateCountdown() {
-            const now = new Date().getTime();
-            const distance = targetDate - now;
-
-            if (distance <= 0) {
-                countdownElement.innerHTML = "ELINDULTUNK! 🏔️";
-                return;
-            }
-
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = String(Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2, '0');
-            const minutes = String(Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
-            const seconds = String(Math.floor((distance % (1000 * 60)) / 1000)).padStart(2, '0');
-
-            countdownElement.innerHTML = `${days} nap ${hours} óra ${minutes} perc ${seconds} mp`;
-        }
-
-        setInterval(updateCountdown, 1000);
-        updateCountdown();
-
-        // --- AKTUÁLIS PROGRAMPONT KIEMELÉSE ZÖLDDEL ---
-        function highlightCurrentEvent() {
-            const now = new Date().getTime();
-            
-            document.querySelectorAll('.program-item').forEach(item => {
-                const startStr = item.getAttribute('data-start');
-                const endStr = item.getAttribute('data-end');
-                
-                if (startStr && endStr) {
-                    const startTime = new Date(startStr).getTime();
-                    const endTime = new Date(endStr).getTime();
-                    
-                    if (now >= startTime && now < endTime) {
-                        item.classList.add('active-now');
-                    } else {
-                        item.classList.remove('active-now');
-                    }
-                }
-            });
-        }
-        
-        // Futtassuk le azonnal betöltéskor, majd frissítsük percenként
-        highlightCurrentEvent();
-        setInterval(highlightCurrentEvent, 60000);
-
         // --- POZÍCIÓ-ALAPÚ HÁTTÉR ANIMÁCIÓ ---
         document.addEventListener("DOMContentLoaded", () => {
             const images = [
                 "images/hatter1.jpg", "images/hatter2.jpg", "images/hatter3.jpg", 
-                "images/hatter4.jpg", "images/hatter5.jpg", "images/hatter6.jpg", 
-                "images/hatter7.jpg", "images/hatter8.jpg", "images/hatter9.jpg", 
-                "images/hatter10.jpg"
+                "images/hatter4.jpg", "images/hatter5.jpg", "images/hatter6.jpg"
             ];
             let currentImageIndex = 0;
             
@@ -604,7 +477,7 @@
             }
             animateBackground();
 
-            // --- GÖRGETÉS FIGYELÉSE ---
+            // --- GÖRGETÉS FIGYELÉSE (Parallax a háttérnek) ---
             window.addEventListener('scroll', () => {
                 const scrollPosition = window.scrollY;
                 const docHeight = document.documentElement.scrollHeight - window.innerHeight;
@@ -613,17 +486,6 @@
                 const yOffset = scrollPercent * maxBgScroll;
                 
                 bgContainer.style.transform = `translateY(${-yOffset}px)`;
-                document.getElementById('scrollProgressBar').style.height = (scrollPercent * 100) + '%';
-            });
-
-            // --- SCROLL REVEAL OBSERVER ---
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach((entry) => { if (entry.isIntersecting) { entry.target.classList.add('active'); }});
-            }, { threshold: 0.1 });
-
-            document.querySelectorAll('.day-section').forEach((el) => {
-                el.classList.add('reveal');
-                observer.observe(el);
             });
         });
     </script>
