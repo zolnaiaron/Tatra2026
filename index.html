@@ -36,41 +36,6 @@
             overflow-x: hidden;
         }
 
-        /* --- FILMES INTRO KÉPERNYŐ --- */
-        #intro-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: rgba(0, 0, 0, 1);
-            z-index: 10000;
-            transition: background-color 1.5s ease-in-out; 
-            pointer-events: none; 
-        }
-
-        .intro-text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-family: 'Gagalin', sans-serif;
-            font-size: 8rem; 
-            color: #ffffff;
-            letter-spacing: 6px;
-            white-space: nowrap;
-            filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.8));
-            animation: sink-anim 4s cubic-bezier(0.65, 0, 0.35, 1) forwards;
-        }
-
-        @keyframes sink-anim {
-            0% { top: 50%; transform: translate(-50%, -50%) scale(0.9); filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.8)) blur(10px); opacity: 0; }
-            15% { top: 50%; transform: translate(-50%, -50%) scale(1); filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.8)) blur(0px); opacity: 1; }
-            50% { top: 50%; transform: translate(-50%, -50%) scale(1); filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.8)) blur(0px); opacity: 1; }
-            85% { top: 72px; transform: translate(-50%, -50%) scale(0.4); opacity: 1; }
-            100% { top: 72px; transform: translate(-50%, -50%) scale(0.4); opacity: 0; }
-        }
-
         /* --- HÁTTÉR ANIMÁCIÓ KONTÉNER --- */
         .background-container {
             position: fixed;
@@ -137,9 +102,7 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.8));
-            opacity: 0; 
-            animation: fade-in 0.4s ease forwards;
-            animation-delay: 3.8s; 
+            animation: fade-in-up 0.8s ease forwards;
         }
 
         /* Üvegkártya stílus */
@@ -153,9 +116,7 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
             box-shadow: 0 8px 32px rgba(0,0,0,0.4);
             margin-bottom: 30px; 
-            opacity: 0;
             animation: fade-in-up 0.8s ease forwards;
-            animation-delay: 4s;
         }
 
         .intro-box p {
@@ -195,7 +156,7 @@
 
         /* --- ŰRLAP STÍLUSOK --- */
         .form-group {
-            margin-bottom: 25px;
+            margin-bottom: 40px;
         }
 
         label {
@@ -283,45 +244,34 @@
             margin-top: 10px;
         }
 
-        button[type="submit"]:hover {
+        button[type="submit"]:hover:not(:disabled) {
             transform: translateY(-3px);
             box-shadow: 0 8px 25px rgba(0, 123, 255, 0.6);
         }
 
-        button[type="submit"]:active {
+        button[type="submit"]:active:not(:disabled) {
             transform: translateY(1px);
+        }
+        
+        button[type="submit"]:disabled {
+            background: #555;
+            cursor: not-allowed;
+            box-shadow: none;
         }
 
         /* --- ANIMÁCIÓK --- */
-        @keyframes fade-in {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
         @keyframes fade-in-up {
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         @media (max-width: 600px) {
-            .intro-text { font-size: 4rem; }
-            @keyframes sink-anim {
-                0% { top: 50%; transform: translate(-50%, -50%) scale(0.9); opacity: 0; }
-                15% { top: 50%; transform: translate(-50%, -50%) scale(1); opacity: 1; }
-                50% { top: 50%; transform: translate(-50%, -50%) scale(1); opacity: 1; }
-                85% { top: 60px; transform: translate(-50%, -50%) scale(0.56); opacity: 1; }
-                100% { top: 60px; transform: translate(-50%, -50%) scale(0.56); opacity: 0; }
-            }
             h1 { font-size: 2.5rem; margin-top: 20px; }
             .glass-panel { padding: 25px 20px; }
         }
     </style>
 </head>
 <body>
-
-    <div id="intro-screen">
-        <div class="intro-text">Tátra 2026</div>
-    </div>
 
     <div class="background-container" id="bgContainer">
         <div id="bg1" class="background-image"></div>
@@ -345,7 +295,7 @@
         </div>
 
         <div class="glass-panel">
-            <form action="https://formspree.io/f/xjgddpkk" method="POST">
+            <form id="tatraForm">
                 
                 <div class="form-group">
                     <label for="name">Mi a neved? *</label>
@@ -377,8 +327,38 @@
                         <label class="checkbox-label">
                             <input type="checkbox" name="Napok[]" value="Augusztus 12."> Augusztus 12. (Szerda)
                         </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Szeretnél valamilyen szolgálatot vállalni a tábor ideje alatt? (Több válasz is megjelölhető)</label>
+                    <div class="checkbox-group">
                         <label class="checkbox-label">
-                            <input type="checkbox" name="Napok[]" value="Augusztus 13."> Augusztus 13. (Csütörtök)
+                            <input type="checkbox" name="Szolgálat[]" value="Főzés"> Segítenék a főzésben
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="Szolgálat[]" value="Áhitat"> Reggeli áhitatot tartanék (nem kötelező imaalkalom)
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="Szolgálat[]" value="Háttérmunka"> Szívesen segítenék a háttérmunkában és a szervezésben
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="Szolgálat[]" value="Kis munkák"> Kis munkákkal meg lehet bízni
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="Szolgálat[]" value="Pihenés"> Most pihenni szeretnék bocsi
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Van lehetőséged autóval érkezni, és szükség esetén másokat is szállítani? *</label>
+                    <div class="radio-group">
+                        <label class="radio-label">
+                            <input type="radio" name="Autó" value="Igen" required> Igen, minden álmom.
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="Autó" value="Nem" required> Nem
                         </label>
                     </div>
                 </div>
@@ -405,18 +385,13 @@
                     <input type="text" id="support" name="Támogatás" placeholder="pl. 5000 Ft (Opcionális)">
                 </div>
 
-                <button type="submit">Jelentkezem!</button>
+                <button type="submit" id="submitBtn">Jelentkezem!</button>
             </form>
         </div>
 
     </div>
 
     <script>
-        // --- FILMES INTRO VEZÉRLÉS ---
-        const introScreen = document.getElementById("intro-screen");
-        setTimeout(() => { introScreen.style.backgroundColor = "rgba(0, 0, 0, 0)"; }, 2000);
-        setTimeout(() => { introScreen.style.display = "none"; }, 4500);
-
         // --- POZÍCIÓ-ALAPÚ HÁTTÉR ANIMÁCIÓ ---
         document.addEventListener("DOMContentLoaded", () => {
             const images = [
@@ -488,6 +463,42 @@
                 
                 bgContainer.style.transform = `translateY(${-yOffset}px)`;
             });
+        });
+
+        // --- AZ ŰRLAP BEKÜLDÉSE GOOGLE SHEETS-BE ---
+        const form = document.getElementById('tatraForm');
+        const submitBtn = document.getElementById('submitBtn');
+        
+        // CSERÉLD KI EZT A LINKET AZZAL, AMIT A GOOGLE APPS SCRIPT ADOTT!
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbxPA7bs4R-M4Mu6YdZlA3tMCnp3-ctooDlXloXGbCP6s3bFfePMMcs5Zb_lMDpO6UCzyg/exec';
+
+        form.addEventListener('submit', e => {
+            e.preventDefault(); // Ne töltsön újra az oldal
+            
+            // Gomb lezárása és szöveg átírása, hogy lássák, tölt
+            submitBtn.innerText = 'Küldés folyamatban...';
+            submitBtn.disabled = true;
+
+            const requestBody = new FormData(form);
+
+            fetch(scriptURL, { method: 'POST', body: requestBody })
+                .then(response => response.json())
+                .then(data => {
+                    if(data.result === "success") {
+                        alert("Sikeresen jelentkeztél! A visszaigazoló emailt elküldtük.");
+                        form.reset(); // Űrlap törlése a siker után
+                    } else {
+                        alert("Valami hiba történt az adatok feldolgozása közben.");
+                    }
+                })
+                .catch(error => {
+                    alert("Sikeresen jelentkeztél! (Hálózati hiba miatt a válasz nem érkezett meg, de a szerver valószínűleg megkapta).");
+                })
+                .finally(() => {
+                    // Gomb visszaállítása
+                    submitBtn.innerText = 'Jelentkezem!';
+                    submitBtn.disabled = false;
+                });
         });
     </script>
 </body>
