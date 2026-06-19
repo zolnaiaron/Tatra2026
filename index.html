@@ -137,7 +137,6 @@
             position: relative;
         }
 
-        /* Kötőjel a felsorolásnál */
         .intro-box li::before {
             content: "-";
             position: absolute;
@@ -207,9 +206,17 @@
             color: rgba(255,255,255,0.9);
         }
 
+        /* Kötelező csillag formázása */
+        .required-star {
+            color: #ff4d4d;
+            font-size: 1.2rem;
+            margin-left: 3px;
+        }
+
         input[type="text"],
         input[type="tel"],
         input[type="email"],
+        input[type="date"],
         textarea {
             width: 100%;
             padding: 15px;
@@ -221,11 +228,13 @@
             font-size: 1rem;
             transition: all 0.3s ease;
             outline: none;
+            color-scheme: dark; 
         }
 
         input[type="text"]:focus,
         input[type="tel"]:focus,
         input[type="email"]:focus,
+        input[type="date"]:focus,
         textarea:focus {
             border-color: #4a90e2;
             background: rgba(0, 0, 0, 0.6);
@@ -237,7 +246,6 @@
             min-height: 100px;
         }
 
-        /* Checkbox és Rádiógomb stílusok */
         .checkbox-group, .radio-group {
             display: flex;
             flex-direction: column;
@@ -299,6 +307,121 @@
             box-shadow: none;
         }
 
+        /* --- GDPR MODAL STÍLUSOK --- */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1000; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgba(0,0,0,0.6); 
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .modal.show {
+            display: block;
+            opacity: 1;
+        }
+        .modal-content {
+            background: rgba(20, 20, 20, 0.95);
+            margin: 10% auto; 
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            width: 90%;
+            max-width: 650px;
+            color: #fff;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+            position: relative;
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+        }
+        .modal.show .modal-content {
+            transform: translateY(0);
+        }
+        .close-btn {
+            color: #aaa;
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 35px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+        .close-btn:hover,
+        .close-btn:focus {
+            color: #fff;
+            text-decoration: none;
+        }
+        .modal-content h2 {
+            font-family: 'Gagalin', sans-serif;
+            color: #4a90e2;
+            margin-bottom: 5px;
+            text-align: center;
+            font-size: 1.8rem;
+            letter-spacing: 2px;
+        }
+        .modal-content .subtitle {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 25px;
+            color: #ccc;
+        }
+        .modal-content h3 {
+            color: #4a90e2;
+            font-size: 1.1rem;
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+        .modal-content p {
+            line-height: 1.6;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+            color: #ddd;
+        }
+        .modal-content ul {
+            list-style-type: disc;
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+        .modal-content ul li {
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+            color: #ddd;
+            position: relative;
+            padding-left: 0;
+        }
+        .modal-content ul li::before {
+            content: none; 
+        }
+
+        /* Sikeres üzenet stílusa */
+        #successMessage {
+            display: none;
+            text-align: center;
+            padding: 30px 10px;
+            animation: fade-in-up 0.5s ease forwards;
+        }
+
+        #successMessage .icon {
+            font-size: 5rem;
+            margin-bottom: 20px;
+        }
+
+        #successMessage h2 {
+            font-family: 'Gagalin', sans-serif;
+            letter-spacing: 2px;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: #4a90e2;
+        }
+
         /* --- ANIMÁCIÓK --- */
         @keyframes fade-in-up {
             from { opacity: 0; transform: translateY(30px); }
@@ -308,6 +431,9 @@
         @media (max-width: 600px) {
             h1 { font-size: 2.5rem; margin-top: 20px; }
             .glass-panel { padding: 25px 20px; }
+            #successMessage h2 { font-size: 2rem; }
+            .modal-content { padding: 25px; margin: 15% auto; }
+            .modal-content h2 { font-size: 1.5rem; }
         }
     </style>
 </head>
@@ -334,7 +460,6 @@
                 <li>Közösségi programok: röpizés, úszás egy furcsa eredetű tóban, és még sok minden más</li>
             </ul>
 
-            <!-- Rendezett részletek blokk -->
             <div class="details-grid">
                 <div class="detail-item">
                     <div class="detail-icon">🗓️</div>
@@ -382,18 +507,38 @@
             <form id="tatraForm">
                 
                 <div class="form-group">
-                    <label for="name">Mi a neved? *</label>
+                    <label for="name">Mi a neved? <span class="required-star">*</span></label>
                     <input type="text" id="name" name="Név" placeholder="Vezeték- és keresztnév" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="email">Mi az e-mail címed? (Ide küldjük a visszaigazolást) *</label>
+                    <label for="email">Mi az e-mail címed? (Ide küldjük a visszaigazolást) <span class="required-star">*</span></label>
                     <input type="email" id="email" name="email" placeholder="pelda@email.hu" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="phone">Telefonszám *</label>
-                    <input type="tel" id="phone" name="Telefonszám" placeholder="+36201234567" required>
+                    <label for="phone">Telefonszám <span class="required-star">*</span></label>
+                    <input type="tel" id="phone" name="Telefonszám" placeholder="+36201234567" pattern="[\+]\d{10,14}" title="Kérlek a +36 formátumot használd, szóközök nélkül!" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="birthdate">Születési dátum <span class="required-star">*</span></label>
+                    <input type="date" id="birthdate" name="Születési_dátum" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="birthplace">Születési hely <span class="required-star">*</span></label>
+                    <input type="text" id="birthplace" name="Születési_hely" placeholder="pl. Budapest" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Állandó lakcím <span class="required-star">*</span></label>
+                    <input type="text" id="address" name="Lakcím" placeholder="Irányítószám, Település, Utca, Házszám" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="id_number">Személyi igazolvány vagy Útlevél száma <span class="required-star">*</span></label>
+                    <input type="text" id="id_number" name="Okmányszám" placeholder="pl. 123456AB" required>
                 </div>
 
                 <div class="form-group">
@@ -436,7 +581,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Van lehetőséged autóval érkezni, és szükség esetén másokat is szállítani? *</label>
+                    <label>Van lehetőséged autóval érkezni, és szükség esetén másokat is szállítani? <span class="required-star">*</span></label>
                     <div class="radio-group">
                         <label class="radio-label">
                             <input type="radio" name="Autó" value="Igen" required> Igen, minden álmom.
@@ -453,7 +598,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Milyen fizetési módot választasz? *</label>
+                    <label>Milyen fizetési módot választasz? <span class="required-star">*</span></label>
                     <div class="radio-group">
                         <label class="radio-label">
                             <input type="radio" name="Fizetési_mód" value="Készpénzes fizetés" required> Készpénzes fizetés
@@ -469,10 +614,62 @@
                     <input type="text" id="support" name="Támogatás" placeholder="pl. 5000 Ft (Opcionális)">
                 </div>
 
+                <!-- GDPR CHECKBOX ÉS GOMB -->
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <label class="checkbox-label" style="align-items: flex-start;">
+                            <input type="checkbox" name="GDPR_elfogadva" value="Igen" required style="margin-top: 5px;">
+                            <span style="line-height: 1.4; font-size: 0.9rem;">
+                                Elfogadom az <a href="#" id="openGdprModal" style="color: #4a90e2; text-decoration: underline;">Adatvédelmi tájékoztatót</a>, és kifejezetten hozzájárulok, hogy a megadott adataimat a tábor szervezése céljából kezeljétek. <span class="required-star">*</span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+
                 <button type="submit" id="submitBtn">Jelentkezem!</button>
             </form>
+
+            <div id="successMessage">
+                <div class="icon">✅</div>
+                <h2>Sikeres jelentkezés!</h2>
+                <p>Köszönjük, hogy regisztráltál a táborba! Várunk nagyon!<br>A visszaigazoló e-mailt hamarosan küldjük.</p>
+            </div>
         </div>
 
+    </div>
+
+    <!-- GDPR FELUGRÓ ABLAK -->
+    <div id="gdprModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeGdprModal">&times;</span>
+            <h2>ADATVÉDELMI TÁJÉKOZTATÓ</h2>
+            <div class="subtitle">Tátra 2026 - Ifitábor regisztráció</div>
+            
+            <h3>1. Az Adatkezelő adatai</h3>
+            <p><strong>Adatkezelő (főszervező):</strong> Zolnai Áron</p>
+            <ul>
+                <li><strong>Elérhetőség:</strong> +36 20 323 7539, aaronzolnai@gmail.com</li>
+            </ul>
+
+            <h3>2. A kezelt adatok köre és a kezelés célja</h3>
+            <p>A táborra való jelentkezés során az alábbi személyes és különleges adatokat kérjük be, kizárólag a tábor biztonságos és gördülékeny megszervezése érdekében:</p>
+            <ul>
+                <li><strong>Név, E-mail cím, Telefonszám:</strong> A résztvevők azonosítása, kapcsolattartás és számlázás/adminisztráció céljából.</li>
+                <li><strong>Születési dátum, Születési hely, Személyi igazolvány/Útlevél száma, Állandó lakcím:</strong> A szlovákiai szálláshelyen (Zelený dom) kötelező idegenforgalmi és vendégkönyvi regisztrációhoz elengedhetetlen.</li>
+                <li><strong>Ételérzékenység / Allergia:</strong> Különleges (egészségügyi) adat. Ennek megadása önkéntes, és kizárólag a megfelelő étkezés biztosítása érdekében kezeljük.</li>
+            </ul>
+
+            <h3>3. Adattovábbítás - Kik férnek hozzá az adatokhoz?</h3>
+            <p>Az adataidat bizalmasan kezeljük. Azokhoz kizárólag a tábor főszervezői férnek hozzá. Az okmányadatokat, a születési adatokat és a lakcímet a jogszabályi kötelezettségek teljesítése miatt továbbítjuk a szállásadó (Zelený dom, Felsőerdőfalva, Szlovákia) felé. Az adatokat harmadik félnek (pl. marketing célból) nem adjuk ki.</p>
+
+            <h3>4. Az adatkezelés időtartama</h3>
+            <p>A megadott adatokat a tábor befejezése és a szükséges anyagi elszámolások lezárása után, legkésőbb pl. 2026. szeptember 30-ig véglegesen töröljük az adatbázisunkból.</p>
+
+            <h3>5. A Te jogaid</h3>
+            <p>Bármikor kérheted a megadott adataid módosítását, vagy a jelentkezésed visszavonásával együtt az adataid teljes törlését a fenti elérhetőségeken (e-mailben vagy telefonon).</p>
+
+            <p><em style="color: #4a90e2; font-size: 0.85rem;">Az űrlapon a "Jelentkezem!" gomb megnyomásával és a jelölőnégyzet bepipálásával önkéntesen és kifejezetten hozzájárulsz ahhoz, hogy a megadott személyes - és esetleges egészségügyi - adataidat a fenti célokból és feltételekkel kezeljük.</em></p>
+        </div>
     </div>
 
     <script>
@@ -549,17 +746,37 @@
             });
         });
 
+        // --- GDPR MODAL LOGIKA ---
+        const gdprModal = document.getElementById("gdprModal");
+        const openGdprBtn = document.getElementById("openGdprModal");
+        const closeGdprBtn = document.getElementById("closeGdprModal");
+
+        openGdprBtn.addEventListener("click", function(e) {
+            e.preventDefault(); 
+            gdprModal.classList.add("show");
+        });
+
+        closeGdprBtn.addEventListener("click", function() {
+            gdprModal.classList.remove("show");
+        });
+
+        window.addEventListener("click", function(event) {
+            if (event.target === gdprModal) {
+                gdprModal.classList.remove("show");
+            }
+        });
+
         // --- AZ ŰRLAP BEKÜLDÉSE GOOGLE SHEETS-BE ---
         const form = document.getElementById('tatraForm');
         const submitBtn = document.getElementById('submitBtn');
+        const successMessage = document.getElementById('successMessage');
         
         // CSERÉLD KI EZT A LINKET AZZAL, AMIT A GOOGLE APPS SCRIPT ADOTT!
         const scriptURL = 'https://script.google.com/macros/s/AKfycbxPA7bs4R-M4Mu6YdZlA3tMCnp3-ctooDlXloXGbCP6s3bFfePMMcs5Zb_lMDpO6UCzyg/exec';
 
         form.addEventListener('submit', e => {
-            e.preventDefault(); // Ne töltsön újra az oldal
+            e.preventDefault(); 
             
-            // Gomb lezárása és szöveg átírása, hogy lássák, tölt
             submitBtn.innerText = 'Küldés folyamatban...';
             submitBtn.disabled = true;
 
@@ -569,19 +786,21 @@
                 .then(response => response.json())
                 .then(data => {
                     if(data.result === "success") {
-                        alert("Sikeresen jelentkeztél! A visszaigazoló emailt elküldtük.");
-                        form.reset(); // Űrlap törlése a siker után
+                        // Űrlap elrejtése és a sikeres üzenet megjelenítése
+                        form.style.display = 'none';
+                        successMessage.style.display = 'block';
+                        form.reset(); 
                     } else {
                         alert("Valami hiba történt az adatok feldolgozása közben.");
+                        submitBtn.innerText = 'Jelentkezem!';
+                        submitBtn.disabled = false;
                     }
                 })
                 .catch(error => {
-                    alert("Sikeresen jelentkeztél! (Hálózati hiba miatt a válasz nem érkezett meg, de a szerver valószínűleg megkapta).");
-                })
-                .finally(() => {
-                    // Gomb visszaállítása
-                    submitBtn.innerText = 'Jelentkezem!';
-                    submitBtn.disabled = false;
+                    // Ha a hálózat miatt hiba van, de amúgy a szerver elkaphatta
+                    form.style.display = 'none';
+                    successMessage.style.display = 'block';
+                    form.reset();
                 });
         });
     </script>
