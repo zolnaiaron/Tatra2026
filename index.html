@@ -127,31 +127,71 @@
 
         .intro-box ul {
             list-style: none;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
             padding-left: 0;
         }
 
         .intro-box li {
             margin-bottom: 10px;
-            padding-left: 25px;
+            padding-left: 15px;
             position: relative;
         }
 
+        /* Kötőjel a felsorolásnál */
         .intro-box li::before {
-            content: "🏔️";
+            content: "-";
             position: absolute;
             left: 0;
             top: 0;
-        }
-
-        .intro-box a {
-            color: #4a90e2;
-            text-decoration: none;
             font-weight: bold;
         }
+
+        /* --- RENDEZETT INFORMÁCIÓS BLOKK (Grid) --- */
+        .details-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 20px 0 30px 0;
+            background: rgba(0, 0, 0, 0.25);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .detail-icon {
+            font-size: 1.5rem;
+            margin-right: 15px;
+            min-width: 30px;
+            text-align: center;
+        }
+
+        .detail-text {
+            line-height: 1.5;
+        }
+
+        .detail-text strong {
+            display: block;
+            color: #4a90e2;
+            font-size: 1.1rem;
+            margin-bottom: 2px;
+        }
+
+        /* Telefonszám és linkek stílusa */
+        .intro-box a.phone-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+            transition: opacity 0.3s ease;
+        }
         
-        .intro-box a:hover {
+        .intro-box a.phone-link:hover {
             text-decoration: underline;
+            opacity: 0.8;
         }
 
         /* --- ŰRLAP STÍLUSOK --- */
@@ -284,14 +324,58 @@
 
         <div class="glass-panel intro-box">
             <p><strong>Sziasztok!</strong></p>
-            <p>Idén a magaslatokba törünk: az ifitábor a Tátrában lesz! Készüljetek a hegymászásra, a jó levegőre és arra, hogy valószínűleg jobban elfáradunk, mint az év többi részében összesen, de megéri! Ne hagyd ki az év legütősebb túráját!</p>
+            <p>Idén Isten kegyelméből és szeretetéből az ifitábor a Tátrában lesz! Fontos kihangsúlyozni, hogy a tábor azért lehet ilyen olcsó, mert mások támogatják, nem azért, mert spúrok vagyunk.</p>
             
+            <p><strong>Mit fogunk csinálni? 🤨</strong><br>Már a kérdés is rossz, de azért elmondjuk:</p>
             <ul>
-                <li><strong>Időpont:</strong> Augusztus 9-13.</li>
-                <li><strong>Díj:</strong> 30.000 Ft</li>
-                <li><strong>Helyszín:</strong> <a href="https://maps.app.goo.gl/vitRoPHTbitG6w636" target="_blank">Google Maps link itt</a></li>
-                <li><strong>Utazás:</strong> Együtt megyünk kocsikkal! (Részleteket tábor előtt 2-3 héttel beszéljük meg. Ha nagyon gáz a helyzet, a vonat is jó opció lesz.)</li>
+                <li>Gyönyörködünk Isten csodálatos alkotásában (értsd: hegyet mászunk). Emiatt ne aggódj, lesz könnyebb és nehezebb túra is. Az elsőn felmérheted magad!</li>
+                <li>Éjfélig (és talán tovább) tartó társasozások, beszélgetések és lelki beszélgetések</li>
+                <li>Tanítások, csendesség és dicsőítés</li>
+                <li>Közösségi programok: röpizés, úszás egy furcsa eredetű tóban, és még sok minden más</li>
             </ul>
+
+            <!-- Rendezett részletek blokk -->
+            <div class="details-grid">
+                <div class="detail-item">
+                    <div class="detail-icon">🗓️</div>
+                    <div class="detail-text">
+                        <strong>Időpont</strong>
+                        augusztus 9–13.
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-icon">💸</div>
+                    <div class="detail-text">
+                        <strong>Díj</strong>
+                        30.000 Ft (a tábor teljes időtartamára, attól függetlenül, hogy mennyi időt tudsz ott tölteni)
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-icon">🏔️</div>
+                    <div class="detail-text">
+                        <strong>Helyszín</strong>
+                        Szlovákia, Felsőerdőfalva – Zelený dom
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-icon">🏎️</div>
+                    <div class="detail-text">
+                        <strong>Utazás</strong>
+                        Együtt megyünk autókkal! (A részleteket a tábor előtt 2–3 héttel beszéljük meg. Ha nagyon gáz a helyzet, a vonat is opció.)
+                    </div>
+                </div>
+            </div>
+
+            <p><strong>Készpénzes fizetés:</strong><br>
+            Zolnai Áronnál tudsz fizetni: <a href="tel:+36203237539" class="phone-link">+36 20 323 7539</a></p>
+            <br>
+            <p><strong>Banki átutalás:</strong><br>
+            <strong>Kedvezményezett:</strong> Zolnai Áron<br>
+            <strong>Számlaszám:</strong> 11773425-06977609<br>
+            <strong>Összeg:</strong> 30.000 Ft<br>
+            <strong>Közlemény:</strong> Ifitábor, (teljes név)</p>
+            <br>
+            <p><em style="font-size: 0.9rem; opacity: 0.9;">Átutalás után 1–2 munkanapon belül kapsz egy visszaigazoló e-mailt.</em></p>
         </div>
 
         <div class="glass-panel">
