@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="format-detection" content="telephone=no">
     <title>Tátra 2026 – Regisztráció</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
@@ -180,11 +181,13 @@
             margin-bottom: 2px;
         }
 
-        /* Telefonszám és linkek stílusa */
+        /* Telefonszám és linkek stílusa - szigorított iOS védelemmel */
         .intro-box a.phone-link {
-            color: #ffffff;
+            color: #ffffff !important;
             text-decoration: none;
             font-weight: bold;
+            background: transparent !important;
+            -webkit-tap-highlight-color: transparent;
             transition: opacity 0.3s ease;
         }
         
@@ -213,12 +216,17 @@
             margin-left: 3px;
         }
 
+        /* Bemeneti mezők - Szigorított méretezés a Safari miatt */
         input[type="text"],
         input[type="tel"],
         input[type="email"],
         input[type="date"],
         textarea {
-            width: 100%;
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+            -webkit-box-sizing: border-box !important;
+            margin: 0;
             padding: 15px;
             border-radius: 10px;
             border: 1px solid rgba(255,255,255,0.3);
@@ -228,7 +236,15 @@
             font-size: 1rem;
             transition: all 0.3s ease;
             outline: none;
-            color-scheme: dark; 
+            color-scheme: dark;
+            -webkit-appearance: none; /* Ez oldja meg az iOS naptár kilógását! */
+            appearance: none;
+        }
+
+        /* Hogy asztali gépen is lehessen kattintani a naptár ikonra */
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
         }
 
         input[type="text"]:focus,
@@ -614,7 +630,6 @@
                     <input type="text" id="support" name="Támogatás" placeholder="pl. 5000 Ft (Opcionális)">
                 </div>
 
-                <!-- GDPR CHECKBOX ÉS GOMB -->
                 <div class="form-group">
                     <div class="checkbox-group">
                         <label class="checkbox-label" style="align-items: flex-start;">
@@ -638,7 +653,6 @@
 
     </div>
 
-    <!-- GDPR FELUGRÓ ABLAK -->
     <div id="gdprModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" id="closeGdprModal">&times;</span>
@@ -772,7 +786,7 @@
         const successMessage = document.getElementById('successMessage');
         
         // CSERÉLD KI EZT A LINKET AZZAL, AMIT A GOOGLE APPS SCRIPT ADOTT!
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbwJ850q9tTQKyyqLRXIfoJxEOww02clxg2cBdaCv-D3lxQXhyowWzhbnhuortF9fmDm8w/exec';
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbxPA7bs4R-M4Mu6YdZlA3tMCnp3-ctooDlXloXGbCP6s3bFfePMMcs5Zb_lMDpO6UCzyg/exec';
 
         form.addEventListener('submit', e => {
             e.preventDefault(); 
