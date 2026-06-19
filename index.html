@@ -237,8 +237,17 @@
             transition: all 0.3s ease;
             outline: none;
             color-scheme: dark;
-            -webkit-appearance: none; /* Ez oldja meg az iOS naptár kilógását! */
+            -webkit-appearance: none; 
             appearance: none;
+        }
+
+        /* FIX az összenyomott dátummezőre (és a többire is, hogy egyformák legyenek) */
+        input[type="text"],
+        input[type="tel"],
+        input[type="email"],
+        input[type="date"] {
+            height: 52px;
+            line-height: normal;
         }
 
         /* Hogy asztali gépen is lehessen kattintani a naptár ikonra */
