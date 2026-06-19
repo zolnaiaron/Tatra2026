@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Ez a sor tiltja le, hogy az iOS saját szürke dizájnt rakjon a telefonszámra -->
     <meta name="format-detection" content="telephone=no">
     <title>Tátra 2026 – Regisztráció</title>
     
@@ -181,7 +182,7 @@
             margin-bottom: 2px;
         }
 
-        /* Telefonszám és linkek stílusa - szigorított iOS védelemmel */
+        /* Telefonszám és linkek stílusa */
         .intro-box a.phone-link {
             color: #ffffff !important;
             text-decoration: none;
@@ -194,6 +195,57 @@
         .intro-box a.phone-link:hover {
             text-decoration: underline;
             opacity: 0.8;
+        }
+
+        /* Másolható számlaszám stílusa */
+        .copy-wrapper {
+            display: inline-flex;
+            align-items: center;
+            background: transparent;
+            padding: 0 4px;
+            cursor: pointer;
+            position: relative;
+            transition: opacity 0.3s ease;
+            font-weight: bold;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .copy-wrapper:hover {
+            opacity: 0.8;
+        }
+
+        .copy-icon {
+            width: 16px;
+            height: 16px;
+            margin-left: 6px;
+            color: #4a90e2;
+            transition: transform 0.2s ease;
+        }
+
+        .copy-wrapper:active .copy-icon {
+            transform: scale(0.9);
+        }
+
+        .copy-msg {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #4a90e2;
+            color: #fff;
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 4px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease, top 0.3s ease;
+            white-space: nowrap;
+            font-weight: normal;
+        }
+
+        .copy-msg.show {
+            opacity: 1;
+            top: -30px;
         }
 
         /* --- ŰRLAP STÍLUSOK --- */
@@ -216,7 +268,7 @@
             margin-left: 3px;
         }
 
-        /* Bemeneti mezők - Szigorított méretezés a Safari miatt */
+        /* Bemeneti mezők */
         input[type="text"],
         input[type="tel"],
         input[type="email"],
@@ -241,16 +293,14 @@
             appearance: none;
         }
 
-        /* FIX az összenyomott dátummezőre (és a többire is, hogy egyformák legyenek) */
         input[type="text"],
         input[type="tel"],
         input[type="email"],
         input[type="date"] {
-            height: 52px;
-            line-height: normal;
+            min-height: 52px;
+            line-height: 1.2;
         }
 
-        /* Hogy asztali gépen is lehessen kattintani a naptár ikonra */
         input[type="date"]::-webkit-calendar-picker-indicator {
             filter: invert(1);
             cursor: pointer;
@@ -475,12 +525,12 @@
 
         <div class="glass-panel intro-box">
             <p><strong>Sziasztok!</strong></p>
-            <p>Idén Isten kegyelméből és szeretetéből az ifitábor a Tátrában lesz! Fontos kihangsúlyozni, hogy a tábor azért lehet ilyen olcsó, mert mások támogatják, nem azért, mert spúrok vagyunk.</p>
+            <p>Idén Isten kegyelméből és szeretetéből az ifitábor a Tátrában lesz! Fontos kihangsúlyozni, hogy a tábor azért lehet ilyen olcsó, mert mások támogatják, nem azért, mert spurikk vagyunk.</p>
             
             <p><strong>Mit fogunk csinálni? 🤨</strong><br>Már a kérdés is rossz, de azért elmondjuk:</p>
             <ul>
                 <li>Gyönyörködünk Isten csodálatos alkotásában (értsd: hegyet mászunk). Emiatt ne aggódj, lesz könnyebb és nehezebb túra is. Az elsőn felmérheted magad!</li>
-                <li>Éjfélig (és talán tovább) tartó társasozások, beszélgetések és lelki beszélgetések</li>
+                <li>Éjfélig (és talán tovább) tartó társasozások és (lelki)beszélgetések</li>
                 <li>Tanítások, csendesség és dicsőítés</li>
                 <li>Közösségi programok: röpizés, úszás egy furcsa eredetű tóban, és még sok minden más</li>
             </ul>
@@ -521,7 +571,20 @@
             <br>
             <p><strong>Banki átutalás:</strong><br>
             <strong>Kedvezményezett:</strong> Zolnai Áron<br>
-            <strong>Számlaszám:</strong> 11773425-06977609<br>
+            
+            <!-- MÁSOLHATÓ SZÁMLASZÁM BLOKK -->
+            <strong>Számlaszám:</strong> 
+            <span class="copy-wrapper" onclick="copyAccountNumber()">
+                <span id="accountNumberText">11773425-06977609</span>
+                <svg class="copy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                <span class="copy-msg" id="copyMsg">Másolva!</span>
+            </span>
+            <br>
+            <!-- /MÁSOLHATÓ BLOKK VÉGE -->
+            
             <strong>Összeg:</strong> 30.000 Ft<br>
             <strong>Közlemény:</strong> Ifitábor, (teljes név)</p>
             <br>
@@ -639,6 +702,7 @@
                     <input type="text" id="support" name="Támogatás" placeholder="pl. 5000 Ft (Opcionális)">
                 </div>
 
+                <!-- GDPR CHECKBOX ÉS GOMB -->
                 <div class="form-group">
                     <div class="checkbox-group">
                         <label class="checkbox-label" style="align-items: flex-start;">
@@ -662,6 +726,7 @@
 
     </div>
 
+    <!-- GDPR FELUGRÓ ABLAK -->
     <div id="gdprModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" id="closeGdprModal">&times;</span>
@@ -768,6 +833,20 @@
                 bgContainer.style.transform = `translateY(${-yOffset}px)`;
             });
         });
+
+        // --- SZÁMLASZÁM MÁSOLÁSA LOGIKA ---
+        window.copyAccountNumber = function() {
+            const accNum = "11773425-06977609";
+            navigator.clipboard.writeText(accNum).then(() => {
+                const msg = document.getElementById("copyMsg");
+                msg.classList.add("show");
+                setTimeout(() => {
+                    msg.classList.remove("show");
+                }, 2000);
+            }).catch(err => {
+                console.error("Nem sikerült a másolás", err);
+            });
+        };
 
         // --- GDPR MODAL LOGIKA ---
         const gdprModal = document.getElementById("gdprModal");
