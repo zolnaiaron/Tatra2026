@@ -6,6 +6,8 @@
     <!-- Ez a sor tiltja le, hogy az iOS saját szürke dizájnt rakjon a telefonszámra -->
     <meta name="format-detection" content="telephone=no">
     <title>Tátra 2026 – Regisztráció</title>
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <link rel="apple-touch-icon" href="images/favicon.png">
     
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/gagalin" rel="stylesheet">
@@ -503,6 +505,34 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* Animated dots animation */
+        .animated-dots {
+            display: inline-block;
+            letter-spacing: 2px;
+        }
+
+        .dot {
+            display: inline-block;
+            animation: dot-animation 1.4s infinite;
+        }
+
+        .dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes dot-animation {
+            0%, 60%, 100% {
+                opacity: 0.3;
+            }
+            30% {
+                opacity: 1;
+            }
+        }
+
         @media (max-width: 600px) {
             h1 { font-size: 2.5rem; margin-top: 20px; }
             .glass-panel { padding: 25px 20px; }
@@ -720,7 +750,7 @@
             <div id="successMessage">
                 <div class="icon">✅</div>
                 <h2>Sikeres jelentkezés!</h2>
-                <p>Köszönjük, hogy regisztráltál a táborba! Várunk nagyon!<br>A visszaigazoló e-mailt hamarosan küldjük.</p>
+                <p>Köszönjük, hogy regisztráltál a táborba! Várunk nagyon!<br>A visszaigazoló e-mailt hamarosan <span class="animated-dots"><span class="dot">.</span><span class="dot">.</span><span class="dot">.</span></span> küldjük.</p>
             </div>
         </div>
 
