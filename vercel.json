@@ -2,23 +2,19 @@
   "rewrites": [
     {
       "source": "/ifitabor",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/ifitabor/",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/ifitabor/utazas",
-      "destination": "/utazas.html"
-    },
-    {
-      "source": "/ifitabor/ifitabor",
       "destination": "/ifitabor.html"
     },
     {
-      "source": "/ifitabor/(.*)",
-      "destination": "/$1"
+      "source": "/ifitabor/",
+      "destination": "/ifitabor.html"
+    },
+    {
+      "source": "/utazas",
+      "destination": "/utazas.html"
+    },
+    {
+      "source": "/utazas/",
+      "destination": "/utazas.html"
     }
   ]
 }
