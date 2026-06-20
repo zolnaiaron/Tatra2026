@@ -2,11 +2,15 @@
   "rewrites": [
     {
       "source": "/ifitabor",
-      "destination": "/ifitabor.html"
+      "destination": "/ifitabor/index.html"
     },
     {
       "source": "/ifitabor/",
-      "destination": "/ifitabor.html"
+      "destination": "/ifitabor/index.html"
+    },
+    {
+      "source": "/ifitabor/regisztracio",
+      "destination": "/ifitabor/regisztracio.html"
     },
     {
       "source": "/utazas",
