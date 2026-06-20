@@ -1,23 +1,23 @@
 {
   "rewrites": [
     {
-      "source": "/tabor",
+      "source": "/ifitabor",
       "destination": "/index.html"
     },
     {
-      "source": "/tabor/",
+      "source": "/ifitabor/",
       "destination": "/index.html"
     },
     {
-      "source": "/tabor/utazas",
+      "source": "/ifitabor/utazas",
       "destination": "/utazas.html"
     },
     {
-      "source": "/tabor/ifitabor",
+      "source": "/ifitabor/ifitabor",
       "destination": "/ifitabor.html"
     },
     {
-      "source": "/tabor/(.*)",
+      "source": "/ifitabor/(.*)",
       "destination": "/$1"
     }
   ]
