@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#000000">
+    <!-- Ez a sor tiltja le, hogy az iOS saját szürke dizájnt rakjon a telefonszámra -->
     <meta name="format-detection" content="telephone=no">
     <title>Tátra 2026 – Regisztráció</title>
     <link rel="icon" type="image/png" href="../images/favicon.png">
@@ -500,38 +501,38 @@
             color: #4a90e2;
         }
 
-        /* --- ÚJ: REGISZTRÁLT SZÁMLÁLÓ STÍLUSOK (KÖZÉPEN, FEKETÉN) --- */
+        /* --- REGISZTRÁLT SZÁMLÁLÓ STÍLUSOK (UGYANOLYAN SZÜRKE PANELLEL, FEHÉR BETŰVEL) --- */
         .reg-counter {
-            background: rgba(0, 0, 0, 0.65); /* Elegáns fekete üveg háttér */
+            background: rgba(255, 255, 255, 0.1); /* Ugyanaz a szürke üveghatás, mint a többi */
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
             border-radius: 20px;
-            padding: 20px 40px;
+            padding: 30px 40px;
             width: 100%;
             text-align: center;
-            margin-bottom: 30px; /* Távolság az alatta lévő kérdésektől */
+            margin-bottom: 30px; 
             animation: fade-in-up 0.8s ease forwards;
         }
 
         .reg-text {
             display: block;
-            font-size: 1.05rem;
+            font-size: 1.1rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1.5px;
-            opacity: 0.85;
+            opacity: 0.9;
             color: #fff;
-            margin-bottom: 6px;
+            margin-bottom: 10px;
         }
 
         .reg-number {
             display: block;
             font-family: 'Gagalin', sans-serif;
-            font-size: 2.6rem;
-            color: #4a90e2;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+            font-size: 2.8rem;
+            color: #fff; /* Fehér betűszín a számoknak is! */
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
             letter-spacing: 2px;
         }
 
@@ -543,9 +544,9 @@
             .modal-content h2 { font-size: 1.5rem; }
             
             /* Számláló mobil igazítása */
-            .reg-counter { padding: 15px 20px; margin-bottom: 25px; }
-            .reg-number { font-size: 2rem; }
-            .reg-text { font-size: 0.85rem; margin-bottom: 4px; }
+            .reg-counter { padding: 20px 20px; margin-bottom: 25px; }
+            .reg-number { font-size: 2.2rem; }
+            .reg-text { font-size: 0.9rem; margin-bottom: 5px; }
         }
     </style>
 </head>
@@ -560,6 +561,7 @@
     <div class="content">
         <h1>Tátra 2026</h1>
 
+        <!-- LEÍRÁS PANEL -->
         <div class="glass-panel intro-box">
             <p><strong>Sziasztok!</strong></p>
             <p>Idén Isten kegyelméből és szeretetéből az ifitábor a Tátrában lesz! Fontos kihangsúlyozni, hogy a tábor azért lehet ilyen olcsó, mert mások támogatják, nem azért, mert spurikk vagyunk.</p>
@@ -569,7 +571,7 @@
                 <li>Gyönyörködünk Isten csodálatos alkotásában (értsd: hegyet mászunk). Emiatt ne aggódj, lesz könnyebb és nehezebb túra is. Az elsőn felmérheted magad!</li>
                 <li>Éjfélig (és talán tovább) tartó társasozások és (lelki)beszélgetések</li>
                 <li>Tanítások, csendesség és dicsőítés</li>
-                <li>Közösségi programok: röpizés, úszás egy furcsa eredetű tóban, and még sok minden más</li>
+                <li>Közösségi programok: röpizés, úszás egy furcsa eredetű tóban, és még sok minden más</li>
             </ul>
 
             <div class="details-grid">
@@ -609,6 +611,7 @@
             <p><strong>Banki átutalás:</strong><br>
             <strong>Kedvezményezett:</strong> Zolnai Áron<br>
             
+            <!-- MÁSOLHATÓ SZÁMLASZÁM BLOKK -->
             <strong>Számlaszám:</strong> 
             <span class="copy-wrapper" onclick="copyAccountNumber()">
                 <span id="accountNumberText">11773425-06977609</span>
@@ -619,17 +622,21 @@
                 <span class="copy-msg" id="copyMsg">Másolva!</span>
             </span>
             <br>
+            <!-- /MÁSOLHATÓ BLOKK VÉGE -->
+            
             <strong>Összeg:</strong> 30.000 Ft<br>
             <strong>Közlemény:</strong> Ifitábor, (teljes név)</p>
             <br>
             <p><em style="font-size: 0.9rem; opacity: 0.9;">Átutalás után 1–2 munkanapon belül kapsz egy visszaigazoló e-mailt.</em></p>
         </div>
 
+        <!-- REGISZTRÁLTAK SZÁMLÁLÓJA (SZÜRKE PANELLEL) -->
         <div id="registration-counter" class="reg-counter">
             <span class="reg-text">Regisztráltak száma:</span>
             <span class="reg-number"><span id="reg-count-number">...</span> / 21</span>
         </div>
 
+        <!-- KÉRDÉSEK / JELENTKEZÉSI PANEL -->
         <div class="glass-panel">
             <form id="tatraForm">
                 
@@ -741,6 +748,7 @@
                     <input type="text" id="support" name="Támogatás" placeholder="pl. 5000 Ft (Opcionális)">
                 </div>
 
+                <!-- GDPR CHECKBOX ÉS GOMB -->
                 <div class="form-group">
                     <div class="checkbox-group">
                         <label class="checkbox-label" style="align-items: flex-start;">
@@ -752,6 +760,7 @@
                     </div>
                 </div>
 
+                <!-- KÉP ÉS VIDEÓ HOZZÁJÁRULÁS -->
                 <div class="form-group">
                     <div class="checkbox-group">
                         <label class="checkbox-label" style="align-items: flex-start;">
@@ -775,6 +784,7 @@
 
     </div>
 
+    <!-- GDPR FELUGRÓ ABLAK -->
     <div id="gdprModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" id="closeGdprModal">&times;</span>
