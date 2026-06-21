@@ -746,6 +746,18 @@
                     </div>
                 </div>
 
+                <!-- KÉP ÉS VIDEÓ HOZZÁJÁRULÁS -->
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <label class="checkbox-label" style="align-items: flex-start;">
+                            <input type="checkbox" name="Media_hozzajarulas" value="Elfogadva" required style="margin-top: 5px;">
+                            <span style="line-height: 1.4; font-size: 0.9rem;">
+                                Hozzájárulok, hogy a tábor alatt kép- és videófelvétel készüljön rólam, amit az ifi Instagram oldalán közzéteszünk. <span class="required-star">*</span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+
                 <button type="submit" id="submitBtn">Jelentkezem!</button>
             </form>
 
@@ -908,7 +920,7 @@
         const successMessage = document.getElementById('successMessage');
         
         // CSERÉLD KI EZT A LINKET AZZAL, AMIT A GOOGLE APPS SCRIPT ADOTT!
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbyxE7zb2aRud07FQOUib0nv9EbpGAeCbJBs86Os2YB3CpMGoPwIkkt3Yi5fdTnTM02d0w/exec';
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbzmbAgoTv48P6tSsNLjQyu0p-UnrBiU7Wh8aXHu8PDDYFya4F-a-5pnJLfA2GYm0Q3ZIQ/exec';
 
         form.addEventListener('submit', e => {
             e.preventDefault(); 
