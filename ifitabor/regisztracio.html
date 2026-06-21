@@ -501,6 +501,43 @@
             color: #4a90e2;
         }
 
+        /* --- REGISZTRÁLT SZÁMLÁLÓ STÍLUSOK --- */
+        .reg-counter {
+            position: fixed;
+            top: 25px;
+            right: 25px; /* Lebegés jobb felül fixen */
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+            border-radius: 15px;
+            padding: 15px 25px;
+            z-index: 1000;
+            text-align: center;
+            color: #fff;
+            animation: fade-in-up 0.8s ease forwards;
+        }
+
+        .reg-text {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.9;
+            margin-bottom: 5px; /* Kicsi hely a szöveg és a számok között */
+        }
+
+        .reg-number {
+            display: block;
+            font-family: 'Gagalin', sans-serif;
+            font-size: 2.2rem;
+            color: #4a90e2;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            letter-spacing: 2px;
+        }
+
         /* --- ANIMÁCIÓK --- */
         @keyframes fade-in-up {
             from { opacity: 0; transform: translateY(30px); }
@@ -541,6 +578,15 @@
             #successMessage h2 { font-size: 2rem; }
             .modal-content { padding: 25px; margin: 15% auto; }
             .modal-content h2 { font-size: 1.5rem; }
+            
+            /* Számláló mobil nézete */
+            .reg-counter {
+                top: 15px;
+                right: 15px;
+                padding: 10px 15px;
+            }
+            .reg-number { font-size: 1.5rem; }
+            .reg-text { font-size: 0.7rem; margin-bottom: 3px; }
         }
     </style>
 </head>
@@ -551,6 +597,12 @@
         <div id="bg2" class="background-image"></div>
     </div>
     <div class="overlay"></div>
+
+    <!-- REGISZTRÁLTAK LEBEGŐ SZÁMLÁLÓJA -->
+    <div id="registration-counter" class="reg-counter">
+        <span class="reg-text">Regisztráltak száma:</span>
+        <span class="reg-number"><span id="reg-count-number">...</span> / 21</span>
+    </div>
 
     <div class="content">
         <h1>Tátra 2026</h1>
@@ -920,7 +972,7 @@
         const successMessage = document.getElementById('successMessage');
         
         // CSERÉLD KI EZT A LINKET AZZAL, AMIT A GOOGLE APPS SCRIPT ADOTT!
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbzXN_1Hdpt00ybgunpERvY3NhxZJOaI5VV3GOsCEMBJcTyVjnFHwqnQsFUiPu202BjQ/exec';
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbza8ZewYINQQMH_EV4DfjiNoDpcEji2foxoYob9ejYa4To8AVurZVy4y-2XJqo0ath2Ig/exec';
 
         form.addEventListener('submit', e => {
             e.preventDefault(); 
@@ -938,6 +990,8 @@
                         form.style.display = 'none';
                         successMessage.style.display = 'block';
                         form.reset(); 
+                        // Létszám frissítése sikeres beküldés után (hogy látszódjon az új regisztrált)
+                        fetchRegistrationCount();
                     } else {
                         alert("Hiba: " + data.error);
                         submitBtn.innerText = 'Jelentkezem!';
@@ -949,8 +1003,28 @@
                     form.style.display = 'none';
                     successMessage.style.display = 'block';
                     form.reset();
+                    fetchRegistrationCount();
                 });
         });
+
+        // --- LÉTSZÁM LEKÉRDEZÉSE BETÖLTÉSKOR ---
+        function fetchRegistrationCount() {
+            fetch(scriptURL)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.count !== undefined) {
+                        const countDisplay = document.getElementById('reg-count-number');
+                        countDisplay.innerText = data.count; // Csak a számot cseréljük, a "/ 21" marad!
+                    }
+                })
+                .catch(error => {
+                    console.error("Hiba a létszám lekérdezésekor:", error);
+                    document.getElementById('reg-count-number').innerText = "?";
+                });
+        }
+
+        // Elindítjuk azonnal a számláló lekérését az oldal betöltésekor
+        fetchRegistrationCount();
     </script>
 </body>
 </html>
