@@ -29,6 +29,14 @@
       "destination": "/ifitabor/enekbekuldes.html"
     },
     {
+      "source": "/ifitabor/szavazas",
+      "destination": "/ifitabor/szavazas.html"
+    },
+    {
+      "source": "/ifitabor/szavazas/",
+      "destination": "/ifitabor/szavazas.html"
+    },
+    {
       "source": "/utazas",
       "destination": "/utazas.html"
     },
