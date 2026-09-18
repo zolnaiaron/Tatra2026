@@ -681,12 +681,10 @@
                 formData.append('Idopont', new Date().toLocaleString('hu-HU'));
 
                 // Beküldés a Google Táblázatba / Scriptbe
-                fetch(scriptURL, { method: 'POST', body: formData })
-                    .then(res => {
-                        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                        return res.json().catch(() => ({}));
-                    })
-                    .then(data => {
+                // A Google Apps Script POST-válasza egyes böngészőkben CORS-korlátozott.
+                // A no-cors móddal maga a szavazat biztosan eljut a Scripthez.
+                fetch(scriptURL, { method: 'POST', body: formData, mode: 'no-cors' })
+                    .then(() => {
                         onSuccessSubmission(selectedDestination.value);
                     })
                     .catch(err => {
