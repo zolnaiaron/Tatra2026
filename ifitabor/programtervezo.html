@@ -404,6 +404,25 @@
             .drag-handle { position: absolute; top: 20px; right: 60px; margin: 0; }
         }
     </style>
+    <!-- Ideiglenes karbantartási nézet: az eredeti oldal kódja változatlanul megmarad. -->
+    <style>
+        body { min-height: 100vh !important; margin: 0 !important; background: #000 !important; }
+        body > * { display: none !important; }
+        body::after {
+            content: "Karbantartás alatt...\A A 2027 táborra optimalizálás\A Regisztráció kezdete: 2027. február 15.";
+            white-space: pre-line;
+            position: fixed;
+            inset: 0;
+            z-index: 2147483647;
+            display: grid;
+            place-content: center;
+            padding: 2rem;
+            background: #000;
+            color: #fff;
+            font: 600 clamp(1.35rem, 4vw, 2.5rem)/1.5 Arial, sans-serif;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
 
