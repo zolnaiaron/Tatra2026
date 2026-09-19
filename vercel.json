@@ -1,6 +1,14 @@
 {
   "rewrites": [
     {
+      "source": "/obgyifi/szolgalat",
+      "destination": "/obgyifi/szolgalat.html"
+    },
+    {
+      "source": "/obgyifi/szolgalat/",
+      "destination": "/obgyifi/szolgalat.html"
+    },
+    {
       "source": "/ifitabor",
       "destination": "/ifitabor/index.html"
     },
