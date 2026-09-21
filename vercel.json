@@ -17,6 +17,14 @@
       "destination": "/obgyifi/szolgalat.html"
     },
     {
+      "source": "/obgyifi/fiukor/projekt",
+      "destination": "/obgyifi/fiukor/projekt.html"
+    },
+    {
+      "source": "/obgyifi/fiukor/projekt/",
+      "destination": "/obgyifi/fiukor/projekt.html"
+    },
+    {
       "source": "/ifitabor",
       "destination": "/ifitabor/index.html"
     },
