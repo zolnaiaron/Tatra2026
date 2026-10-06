@@ -227,12 +227,16 @@
         .booking-info b { font-weight: 800; }
         .booking-btns { display: flex; gap: 8px; flex-shrink: 0; }
         .action-btn.accept:hover { background: rgba(74, 222, 128, 0.15); border-color: rgba(74, 222, 128, 0.4); color: #4ade80; }
-        .book-tab {
-            display: block; width: 100%; margin-top: 30px; padding: 16px; background: transparent; color: var(--fg);
-            border: 1px dashed rgba(74, 222, 128, 0.5); border-radius: 12px; font-size: 0.85rem; font-weight: 600;
-            text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer; transition: all 0.3s;
+        .booking-footer {
+            display: flex; justify-content: flex-end; margin-top: 30px; padding-top: 20px;
+            border-top: 1px solid var(--glass-border);
         }
-        .book-tab:hover { background: rgba(74, 222, 128, 0.12); }
+        .book-tab {
+            display: block; padding: 0; background: transparent; color: var(--muted); border: none;
+            font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
+            cursor: pointer; transition: color 0.3s;
+        }
+        .book-tab:hover { color: var(--fg); }
         @media (max-width: 600px) {
             .booking-item { flex-direction: column; align-items: flex-start; }
             .cal-free { font-size: 0.56rem; padding: 3px 2px; }
@@ -300,7 +304,9 @@
 
         <div id="schedule-container"></div>
 
-        <button class="book-tab" id="bookTab" onclick="openBookingFromList()">+ Foglalni akarok egy alkalmat</button>
+        <div class="booking-footer" id="bookingFooter">
+            <button class="book-tab" id="bookTab" onclick="openBookingFromList()">Alkalom foglalása</button>
+        </div>
     </div>
 
     <!-- MODAL -->
@@ -625,7 +631,7 @@
             viewMode = viewMode === 'list' ? 'calendar' : 'list';
             document.getElementById("app-content").classList.toggle("wide", viewMode === 'calendar');
             document.getElementById("viewToggle").innerText = viewMode === 'calendar' ? '☰ Lista' : '▦ Naptár';
-            document.getElementById("bookTab").style.display = viewMode === 'calendar' ? 'none' : 'block';
+            document.getElementById("bookingFooter").style.display = viewMode === 'calendar' ? 'none' : 'flex';
             renderApp();
         }
 
