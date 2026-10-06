@@ -9,6 +9,14 @@
       "destination": "/obgyifi/szolgalat.html"
     },
     {
+      "source": "/program",
+      "destination": "/obgyifi/program.html"
+    },
+    {
+      "source": "/program/",
+      "destination": "/obgyifi/program.html"
+    },
+    {
       "source": "/obgyifi/szolgalat",
       "destination": "/obgyifi/szolgalat.html"
     },
