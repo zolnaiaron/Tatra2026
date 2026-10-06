@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#050505">
+    <title>Programnaptár</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- Alapváltozók --- */
+        :root {
+            --glass-bg: rgba(15, 15, 15, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-hover: rgba(255, 255, 255, 0.03);
+            --bg-color: #050505;
+            --fg: #ffffff;
+            --muted: #888888;
+            --border-subtle: rgba(255, 255, 255, 0.15);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body {
+            background-color: var(--bg-color); color: var(--fg);
+            -webkit-font-smoothing: antialiased; overflow-x: hidden; min-height: 100vh;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        /* --- Háttér --- */
+        .background-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover; background-position: center; background-repeat: no-repeat;
+            z-index: -2; filter: grayscale(100%) contrast(1.2) brightness(0.6);
+        }
+        .overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, rgba(5, 5, 5, 0.8) 0%, rgba(5, 5, 5, 0.95) 100%);
+            z-index: -1;
+        }
+
+        /* --- Fő panel --- */
+        .container {
+            width: 100%; max-width: 720px; margin: 60px 20px 120px 20px; padding: 50px 40px; position: relative;
+            background: var(--glass-bg); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--glass-border); border-radius: 24px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+            transition: max-width 0.3s ease;
+        }
+        .container.wide { max-width: 1100px; }
+        header {
+            margin-bottom: 50px; display: flex; justify-content: space-between; align-items: flex-end;
+            border-bottom: 1px solid var(--glass-border); padding-bottom: 20px;
+        }
+        h1 { font-size: 2.5rem; font-weight: 800; letter-spacing: -0.05em; text-transform: uppercase; color: rgba(255, 255, 255, 0.95); }
+
+        /* --- Nézetváltó --- */
+        .view-toggle {
+            position: fixed; top: 20px; right: 20px; z-index: 500;
+            background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            color: var(--fg); border: 1px solid var(--border-subtle); border-radius: 999px;
+            padding: 10px 18px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.05em; cursor: pointer; transition: all 0.3s;
+        }
+        .view-toggle:hover { background: var(--fg); color: #000; }
+
+        /* --- Admin gombok --- */
+        .admin-toggle {
+            display: none; background: transparent; border: none; color: var(--muted); cursor: pointer;
+            font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; transition: color 0.3s;
+        }
+        .admin-toggle:hover { color: var(--fg); }
+        .admin-mode .admin-toggle { color: var(--fg); text-decoration: underline; }
+        .admin-actions { display: none; margin-bottom: 30px; }
+        .admin-mode .admin-actions { display: block; }
+        .add-btn {
+            background: rgba(255, 255, 255, 0.1); color: var(--fg); border: 1px solid var(--border-subtle);
+            padding: 14px 24px; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
+            cursor: pointer; width: 100%; border-radius: 12px; transition: all 0.3s ease;
+        }
+        .add-btn:hover { background: rgba(255, 255, 255, 0.15); border-color: rgba(255, 255, 255, 0.3); }
+
+        /* --- Lista nézet --- */
+        .program-list { display: flex; flex-direction: column; gap: 15px; }
+        .program-item {
+            display: flex; padding: 25px; border: 1px solid transparent; border-radius: 16px;
+            background: rgba(255, 255, 255, 0.02); align-items: center; gap: 25px; transition: all 0.3s ease; position: relative;
+        }
+        .program-item:hover { background: var(--glass-hover); border-color: var(--glass-border); }
+        .program-date-container { width: 100px; flex-shrink: 0; border-right: 1px solid var(--glass-border); padding-right: 20px; text-align: center; }
+        .program-date { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.02em; color: rgba(255, 255, 255, 0.9); }
+        .program-details { flex-grow: 1; }
+        .program-speaker { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; font-weight: 600; letter-spacing: 0.08em; margin-bottom: 6px; }
+        .program-title { font-size: 1.3rem; font-weight: 600; line-height: 1.3; letter-spacing: -0.01em; color: var(--fg); }
+
+        /* --- Fel/le nyilak --- */
+        .move-btns { display: none; flex-direction: column; gap: 6px; }
+        .admin-mode .move-btns { display: flex; }
+        .move-btns .action-btn { padding: 6px 10px; }
+        .action-btn:disabled { opacity: 0.25; pointer-events: none; }
+
+        /* --- Naptár nézet --- */
+        .calendar { border: 2px solid #fff; border-radius: 16px; overflow: hidden; background: rgba(0, 0, 0, 0.35); }
+        .cal-head { background: #fff; color: #000; display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; }
+        .cal-title { font-size: 1.7rem; font-weight: 800; letter-spacing: -0.03em; }
+        .cal-controls { display: flex; gap: 8px; align-items: center; }
+        .cal-nav, .cal-today {
+            background: transparent; border: 1px solid rgba(0, 0, 0, 0.25); color: #000;
+            border-radius: 8px; cursor: pointer; font-weight: 600; height: 36px; transition: background 0.2s;
+        }
+        .cal-nav { width: 36px; font-size: 1.3rem; line-height: 1; }
+        .cal-today { padding: 0 14px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        .cal-nav:hover, .cal-today:hover { background: rgba(0, 0, 0, 0.08); }
+        .cal-weekdays, .cal-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
+        .cal-weekdays div {
+            padding: 10px 4px; text-align: center; font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.08em; color: var(--muted); border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+        }
+        .cal-cell {
+            min-height: 110px; padding: 6px; min-width: 0; display: flex; flex-direction: column; gap: 4px;
+            border-right: 1px solid rgba(255, 255, 255, 0.2); border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .cal-cell:nth-child(7n) { border-right: none; }
+        .cal-cell.other { opacity: 0.4; }
+        .admin-mode .cal-cell { cursor: pointer; }
+        .admin-mode .cal-cell:hover { background: var(--glass-hover); }
+        .cal-num { align-self: center; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 0.8rem; font-weight: 600; }
+        .cal-cell.today .cal-num { background: #fff; color: #000; }
+        .cal-event { background: #fff; color: #000; border-radius: 6px; padding: 3px 6px; font-size: 0.72rem; font-weight: 600; line-height: 1.25; overflow-wrap: anywhere; }
+        .cal-event span { display: block; font-weight: 400; opacity: 0.6; font-size: 0.9em; }
+        .admin-mode .cal-event { cursor: pointer; }
+
+        /* --- Műveletek és Modal --- */
+        .actions { display: none; flex-direction: column; gap: 8px; }
+        .admin-mode .actions { display: flex; }
+        .action-btn {
+            background: transparent; border: 1px solid var(--glass-border); color: var(--muted); padding: 8px 14px;
+            font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
+            cursor: pointer; border-radius: 8px; transition: all 0.2s;
+        }
+        .action-btn:hover { background: rgba(255, 255, 255, 0.1); color: var(--fg); border-color: rgba(255, 255, 255, 0.3); }
+        .action-btn.delete:hover { background: rgba(255, 50, 50, 0.15); border-color: rgba(255, 50, 50, 0.3); color: #ff5555; }
+
+        .modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            z-index: 1000; align-items: center; justify-content: center;
+        }
+        .modal.active { display: flex; }
+        .modal-content {
+            background: rgba(20, 20, 20, 0.85); border: 1px solid var(--glass-border); border-radius: 20px;
+            padding: 40px; width: 100%; max-width: 450px; position: relative; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.9);
+            max-height: 94vh; overflow-y: auto;
+        }
+        .modal-content h2 {
+            font-size: 1.5rem; margin-bottom: 30px; font-weight: 800; text-transform: uppercase;
+            letter-spacing: 0.05em; border-bottom: 1px solid var(--glass-border); padding-bottom: 15px;
+        }
+        .close-modal { position: absolute; top: 25px; right: 25px; font-size: 1.2rem; font-weight: 400; cursor: pointer; color: var(--muted); transition: color 0.2s; }
+        .close-modal:hover { color: var(--fg); }
+        .form-group { margin-bottom: 25px; }
+        .form-group label { display: block; margin-bottom: 10px; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
+        .form-group input[type="text"], .form-group input[type="email"], .form-group select {
+            width: 100%; padding: 14px 16px; background: rgba(0, 0, 0, 0.5); border: 1px solid var(--border-subtle);
+            border-radius: 10px; color: var(--fg); font-size: 0.95rem; outline: none; transition: border-color 0.3s;
+        }
+        .form-group input[type="text"]:focus, .form-group input[type="email"]:focus, .form-group select:focus { border-color: rgba(255, 255, 255, 0.5); }
+        .form-group select option { background: #141414; color: #fff; }
+
+        /* --- Színválasztó --- */
+        .color-picker { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; max-width: 260px; }
+        .color-swatch { aspect-ratio: 1; border-radius: 50%; border: none; cursor: pointer; transition: transform 0.15s; }
+        .color-swatch:hover { transform: scale(1.1); }
+        .color-swatch.active { box-shadow: 0 0 0 2px #141414, 0 0 0 4px #fff; }
+
+        /* --- Egyedi Checkbox a több napos eseményhez --- */
+        .checkbox-group { margin-bottom: 25px; }
+        .checkbox-container {
+            display: inline-flex; align-items: center; position: relative; padding-left: 32px;
+            cursor: pointer; font-size: 0.85rem; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.05em; color: var(--fg); user-select: none;
+        }
+        .checkbox-container input { position: absolute; opacity: 0; cursor: pointer; height: 0; width: 0; }
+        .checkmark {
+            position: absolute; top: 50%; left: 0; transform: translateY(-50%);
+            height: 20px; width: 20px; background-color: transparent; border: 2px solid #fff;
+            border-radius: 4px; transition: all 0.2s;
+        }
+        .checkbox-container:hover input ~ .checkmark { background-color: rgba(255, 255, 255, 0.1); }
+        .checkmark:after {
+            content: ""; position: absolute; display: none; left: 6px; top: 2px;
+            width: 5px; height: 10px; border: solid #fff; border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+        .checkbox-container input:checked ~ .checkmark:after { display: block; }
+
+        .save-btn {
+            width: 100%; padding: 16px; background: rgba(255, 255, 255, 0.1); color: var(--fg); border: 1px solid var(--border-subtle);
+            border-radius: 12px; font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
+            cursor: pointer; margin-top: 10px; transition: all 0.3s ease;
+        }
+        .save-btn:hover { background: var(--fg); color: #000; }
+
+        #sync-status {
+            position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border: 1px solid var(--glass-border);
+            border-radius: 999px; color: var(--fg); padding: 12px 24px; font-weight: 600; font-size: 0.75rem;
+            letter-spacing: 0.05em; text-transform: uppercase; z-index: 999; opacity: 0; transition: opacity 0.3s; pointer-events: none;
+        }
+
+        /* --- Foglalás --- */
+        .cal-free {
+            background: #4ade80; color: #000; border: none; border-radius: 999px; width: 100%; padding: 4px 8px;
+            font-size: 0.68rem; font-weight: 600; line-height: 1.25; text-align: center; cursor: pointer;
+            overflow-wrap: anywhere; transition: filter 0.2s;
+        }
+        .cal-free:hover { filter: brightness(1.12); }
+        .save-btn:disabled { opacity: 0.5; cursor: default; }
+        .booking-note { font-size: 0.85rem; margin-top: 12px; min-height: 1em; }
+        .booking-admin { display: none; margin-bottom: 30px; border: 1px solid var(--glass-border); border-radius: 16px; padding: 20px; }
+        .admin-mode .booking-admin { display: block; }
+        .booking-admin h3 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 15px; }
+        .booking-item { display: flex; gap: 15px; align-items: center; justify-content: space-between; padding: 14px 0; border-top: 1px solid var(--glass-border); }
+        .booking-info { font-size: 0.9rem; line-height: 1.5; min-width: 0; overflow-wrap: anywhere; }
+        .booking-info b { font-weight: 800; }
+        .booking-btns { display: flex; gap: 8px; flex-shrink: 0; }
+        .action-btn.accept:hover { background: rgba(74, 222, 128, 0.15); border-color: rgba(74, 222, 128, 0.4); color: #4ade80; }
+        .book-tab {
+            display: block; width: 100%; margin-top: 30px; padding: 16px; background: transparent; color: var(--fg);
+            border: 1px dashed rgba(74, 222, 128, 0.5); border-radius: 12px; font-size: 0.85rem; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer; transition: all 0.3s;
+        }
+        .book-tab:hover { background: rgba(74, 222, 128, 0.12); }
+        @media (max-width: 600px) {
+            .booking-item { flex-direction: column; align-items: flex-start; }
+            .cal-free { font-size: 0.56rem; padding: 3px 2px; }
+        }
+
+        /* --- Több napos események --- */
+        .calendar { --gap: 13px; }
+        .cal-event.multi {
+            position: relative; z-index: 2; width: calc(var(--n, 1) * 100% + (var(--n, 1) - 1) * var(--gap));
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .cal-event.multi.ph { visibility: hidden; }
+        .cal-event.sq-l { border-top-left-radius: 0; border-bottom-left-radius: 0; }
+        .cal-event.sq-r { border-top-right-radius: 0; border-bottom-right-radius: 0; }
+        .admin-mode .cal-cell { user-select: none; -webkit-user-select: none; }
+        .cal-cell.sel { background: rgba(255, 255, 255, 0.14); }
+        .program-date-end { font-size: 1rem; font-weight: 600; letter-spacing: -0.01em; color: var(--muted); }
+        @media (max-width: 600px) {
+            .calendar { --gap: 7px; }
+            .program-date-container { gap: 8px; align-items: baseline; }
+        }
+
+        /* --- Mobil nézet --- */
+        @media (max-width: 600px) {
+            .container { margin: 20px 10px; padding: 40px 20px; border-radius: 20px; }
+            .container.wide { padding: 40px 8px 20px; }
+            h1 { font-size: 2rem; }
+            .view-toggle { top: 12px; right: 12px; padding: 8px 14px; }
+            .program-item { flex-direction: column; align-items: flex-start; gap: 15px; padding: 25px 20px; }
+            .program-date-container { width: 100%; display: flex; border-right: none; border-bottom: 1px solid var(--glass-border); padding-right: 0; padding-bottom: 15px; text-align: left; }
+            .program-title { font-size: 1.2rem; }
+            .actions { flex-direction: row; width: 100%; justify-content: flex-start; margin-top: 5px; }
+            .move-btns { flex-direction: row; position: absolute; top: 18px; right: 18px; }
+            .cal-head { padding: 12px; }
+            .cal-title { font-size: 1.2rem; }
+            .cal-today { padding: 0 10px; }
+            .cal-cell { min-height: 72px; padding: 3px; }
+            .cal-event { font-size: 0.6rem; padding: 2px 3px; border-radius: 4px; }
+            .cal-weekdays div { font-size: 0.6rem; letter-spacing: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="background-container"></div>
+    <div class="overlay"></div>
+
+    <button class="view-toggle" id="viewToggle" onclick="toggleView()">▦ Naptár</button>
+
+    <div class="container" id="app-content">
+        <header>
+            <h1>Program</h1>
+            <button class="admin-toggle" id="adminToggle" onclick="toggleAdmin()">Admin</button>
+        </header>
+
+        <div class="admin-actions">
+            <button class="add-btn" onclick="openModal()">+ Új program</button>
+        </div>
+
+        <div class="booking-admin">
+            <h3>Foglalási kérelmek (<span id="booking-count">0</span>)</h3>
+            <div id="booking-list"></div>
+            <div class="booking-note" id="booking-note"></div>
+        </div>
+
+        <div id="schedule-container"></div>
+
+        <button class="book-tab" id="bookTab" onclick="openBookingFromList()">+ Foglalni akarok egy alkalmat</button>
+    </div>
+
+    <!-- MODAL -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">✕</span>
+            <h2 id="modalTitle">Szerkesztés</h2>
+            <form id="programForm" onsubmit="saveEvent(event)">
+                <input type="hidden" id="eventId">
+
+                <div class="form-group">
+                    <label>Dátum (pl. 10.12.)</label>
+                    <input type="text" id="eventDay" required autocomplete="off" placeholder="Hónap.Nap.">
+                </div>
+
+                <div class="checkbox-group">
+                    <label class="checkbox-container">
+                        Több napos esemény
+                        <input type="checkbox" id="isMultiDay" onchange="toggleEndDay()">
+                        <span class="checkmark"></span>
+                    </label>
+                </div>
+
+                <div class="form-group" id="endDayGroup" style="display: none;">
+                    <label>Utolsó nap</label>
+                    <input type="text" id="eventEndDay" autocomplete="off" placeholder="Hónap.Nap.">
+                </div>
+
+                <input type="hidden" id="eventColor" value="">
+                <div class="form-group">
+                    <label>Szín (csak a naptárban)</label>
+                    <div class="color-picker" id="colorPicker"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Cím / Téma</label>
+                    <input type="text" id="eventTitle" required autocomplete="off">
+                </div>
+
+                <div class="form-group">
+                    <label>Előadó (opcionális)</label>
+                    <input type="text" id="eventTeacher" autocomplete="off">
+                </div>
+
+                <button type="submit" class="save-btn">Mentés</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- FOGLALÁSI KÉRELEM -->
+    <div class="modal" id="bookModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeBooking()">✕</span>
+            <h2>Foglalási kérelem</h2>
+            <p id="bookDate" style="font-weight: 600; margin: -10px 0 25px;"></p>
+            <form id="bookForm" onsubmit="submitBooking(event)">
+                <div class="form-group" id="bookDateGroup" style="display: none;">
+                    <label>Melyik napra?</label>
+                    <select id="bookDateSelect" required></select>
+                </div>
+                <div class="form-group"><label>Tanító neve</label><input type="text" id="bookTeacher" required maxlength="100" autocomplete="name"></div>
+                <div class="form-group"><label>Előadás címe</label><input type="text" id="bookTitle" required maxlength="200" autocomplete="off"></div>
+                <div class="form-group"><label>E-mail cím</label><input type="email" id="bookEmail" required maxlength="200" autocomplete="email"></div>
+                <button type="submit" class="save-btn" id="bookSubmit">Kérelem küldése</button>
+                <div class="booking-note" id="bookNote"></div>
+            </form>
+        </div>
+    </div>
+
+    <div id="sync-status">Szinkronizálás...</div>
+
+    <script>
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbxVh3MJNudsL2it_pkErj07dtP6h3LB1DXpKUu17DMzGzCxnGfpjTCQyxVWF_LkQ-3m/exec';
+
+        let scheduleData = [];
+        let isAdmin = false;
+        let adminPwd = "";
+        let bookings = [];
+
+        let viewMode = 'list';
+        const nowDate = new Date();
+        let calYear = nowDate.getFullYear();
+        let calMonth = nowDate.getMonth();
+
+        const MONTHS = ['Január', 'Február', 'Március', 'Április', 'Május', 'Június', 'Július', 'Augusztus', 'Szeptember', 'Október', 'November', 'December'];
+        const WEEKDAYS = ['H', 'K', 'Sze', 'Cs', 'P', 'Szo', 'V'];
+        const pad = n => String(n).padStart(2, '0');
+        const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+        // Az esemény színe a (korábban üres) "time" mezőben tárolódik hex értékként; üres = fehér
+        const PALETTE = ['#ffffff', '#f87171', '#fb923c', '#fbbf24', '#facc15', '#a3e635', '#34d399', '#2dd4bf', '#22d3ee', '#38bdf8', '#60a5fa', '#818cf8', '#c084fc', '#f472b6', '#fb7185'];
+        const evColor = ev => /^#[0-9a-f]{6}$/i.test(ev.time || '') ? ev.time : '#ffffff';
+
+        async function checkIpAndShowAdminButton() {
+            try {
+                let ipResponse = await fetch('https://api.ipify.org?format=json');
+                let ipData = await ipResponse.json();
+                let userIp = ipData.ip;
+
+                let checkResponse = await fetch(scriptURL + '?type=checkIp&ip=' + encodeURIComponent(userIp));
+                let checkData = await checkResponse.json();
+
+                if (checkData.allowed === true) {
+                    document.getElementById("adminToggle").style.display = "block";
+                }
+            } catch (error) {
+                console.error("IP hiba:", error);
+            }
+        }
+
+        function fetchSchedule() {
+            const container = document.getElementById("schedule-container");
+            if (scheduleData.length === 0) {
+                container.innerHTML = '<div style="color: var(--muted); font-weight: 600;">Adatok betöltése...</div>';
+            }
+
+            fetch(scriptURL + '?type=program')
+                .then(response => response.json())
+                .then(data => {
+                    scheduleData = data;
+                    renderApp();
+                })
+                .catch(error => {
+                    if (scheduleData.length === 0) {
+                        container.innerHTML = '<div style="color:#ff5555;">Hiba történt az adatok betöltésekor.</div>';
+                    }
+                });
+        }
+
+        function formatEventDate(value) {
+            if (!value) return "";
+            const dateText = String(value).trim();
+            const isoDateTime = dateText.match(/^\d{4}-\d{2}-\d{2}T/);
+            if (isoDateTime) {
+                const parts = new Intl.DateTimeFormat("en-US", {
+                    timeZone: "Europe/Budapest", month: "2-digit", day: "2-digit"
+                }).formatToParts(new Date(dateText));
+                const month = parts.find(part => part.type === "month")?.value;
+                const day = parts.find(part => part.type === "day")?.value;
+                if (month && day) return `${month}.${day}`;
+            }
+
+            const isoDate = dateText.match(/^\d{4}-(\d{2})-(\d{2})/);
+            if (isoDate) return `${isoDate[1]}.${isoDate[2]}`;
+
+            const dottedDate = dateText.match(/^\d{4}\.\s*(\d{1,2})\.\s*(\d{1,2})\.?$/);
+            if (dottedDate) return `${dottedDate[1].padStart(2, "0")}.${dottedDate[2].padStart(2, "0")}`;
+
+            return dateText.replace(/^\d{4}\./, "").trim();
+        }
+
+        function parseEventDate(value) {
+            if (!value) return null;
+            const t = String(value).trim();
+            if (/^\d{4}-\d{2}-\d{2}T/.test(t)) {
+                const p = new Intl.DateTimeFormat("en-US", { timeZone: "Europe/Budapest", year: "numeric", month: "2-digit", day: "2-digit" }).formatToParts(new Date(t));
+                const g = k => parseInt(p.find(x => x.type === k)?.value, 10);
+                return { y: g("year"), m: g("month"), d: g("day") };
+            }
+            let r = t.match(/^(\d{4})-(\d{2})-(\d{2})/) || t.match(/^(\d{4})\.\s*(\d{1,2})\.\s*(\d{1,2})\.?$/);
+            if (r) return { y: +r[1], m: +r[2], d: +r[3] };
+            r = t.match(/^(\d{1,2})\.\s*(\d{1,2})\.?$/);
+            if (r) return { y: null, m: +r[1], d: +r[2] };
+            return null;
+        }
+
+        function splitDay(value) {
+            const parts = String(value ?? "").split("~");
+            return [parts[0].trim(), (parts[1] || "").trim()];
+        }
+
+        function parseEventRange(value) {
+            const [s, en] = splitDay(value);
+            const a = parseEventDate(s);
+            if (!a) return null;
+            const b = en ? (parseEventDate(en) || a) : a;
+            let y1 = a.y, y2 = b.y;
+            if (y1 === null && y2 !== null) y1 = y2 - ((a.m * 100 + a.d) > (b.m * 100 + b.d) ? 1 : 0);
+            if (y2 === null && y1 !== null) y2 = y1 + ((b.m * 100 + b.d) < (a.m * 100 + a.d) ? 1 : 0);
+            return { y1, m1: a.m, d1: a.d, y2, m2: b.m, d2: b.d };
+        }
+
+        function rangeInfo(r, y, m, d) {
+            const noYear = r.y1 === null;
+            const key = noYear ? m * 100 + d : y * 10000 + m * 100 + d;
+            const s = noYear ? r.m1 * 100 + r.d1 : r.y1 * 10000 + r.m1 * 100 + r.d1;
+            const e = noYear ? r.m2 * 100 + r.d2 : r.y2 * 10000 + r.m2 * 100 + r.d2;
+            const inside = s <= e ? (key >= s && key <= e) : (key >= s || key <= e);
+            return { inside, start: key === s, end: key === e, multi: s !== e };
+        }
+
+        function editDate(v) {
+            const p = parseEventDate(v);
+            return p && p.y !== null ? `${p.y}.${pad(p.m)}.${pad(p.d)}.` : formatEventDate(v);
+        }
+
+        function buildDayValue() {
+            const s = document.getElementById("eventDay").value.trim();
+            const en = document.getElementById("eventEndDay").value.trim();
+            return en && en !== s ? `${s}~${en}` : s;
+        }
+
+        function renderApp() {
+            if (viewMode === 'calendar') { renderCalendar(); return; }
+
+            const container = document.getElementById("schedule-container");
+            container.innerHTML = "";
+
+            if (scheduleData.length === 0 && !isAdmin) {
+                container.innerHTML = '<div style="color: var(--muted);">Még nincsenek meghirdetett programok.</div>';
+                return;
+            }
+
+            let html = `<div class="program-list">`;
+
+            scheduleData.forEach((ev, idx) => {
+                const [dStart, dEnd] = splitDay(ev.day);
+                const dateHtml = `<div class="program-date">${esc(formatEventDate(dStart))}</div>` +
+                    (dEnd ? `<div class="program-date-end">– ${esc(formatEventDate(dEnd))}</div>` : '');
+                const id = esc(ev.id);
+
+                html += `
+                    <div class="program-item">
+                        <div class="move-btns">
+                            <button class="action-btn" ${idx === 0 ? 'disabled' : ''} onclick="moveEvent('${id}', -1)" aria-label="Fel">▲</button>
+                            <button class="action-btn" ${idx === scheduleData.length - 1 ? 'disabled' : ''} onclick="moveEvent('${id}', 1)" aria-label="Le">▼</button>
+                        </div>
+                        <div class="program-date-container">
+                            ${dateHtml}
+                        </div>
+                        <div class="program-details">
+                            ${ev.teacher ? `<div class="program-speaker">${esc(ev.teacher)}</div>` : ''}
+                            <div class="program-title">${esc(ev.title)}</div>
+                        </div>
+                        <div class="actions">
+                            <button class="action-btn" onclick="openModal('${id}')">Szerkesztés</button>
+                            <button class="action-btn delete" onclick="deleteEvent('${id}')">Törlés</button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `</div>`;
+            container.innerHTML = html;
+        }
+
+        function renderCalendar() {
+            const container = document.getElementById("schedule-container");
+            const offset = (new Date(calYear, calMonth, 1).getDay() + 6) % 7; 
+            const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+            const total = Math.ceil((offset + daysInMonth) / 7) * 7;
+            const parsed = scheduleData.map(ev => ({ ev, r: parseEventRange(ev.day) }));
+            const today = new Date();
+            const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+            let cells = "";
+            for (let i = 0; i < total; i++) {
+                const dt = new Date(calYear, calMonth, 1 - offset + i);
+                const y = dt.getFullYear(), m = dt.getMonth() + 1, d = dt.getDate();
+                const isToday = y === today.getFullYear() && m === today.getMonth() + 1 && d === today.getDate();
+
+                const dow = dt.getDay();
+                const chips = parsed
+                    .map(({ ev, r }) => ({ ev, r, i: r ? rangeInfo(r, y, m, d) : null }))
+                    .filter(x => x.i && x.i.inside)
+                    .sort((a, b) => b.i.multi - a.i.multi)
+                    .map(({ ev, r, i }) => {
+                        const tip = esc(ev.teacher ? ev.teacher + ' – ' + ev.title : ev.title);
+                        const bg = `background:${evColor(ev)};`;
+                        const cid = esc(ev.id);
+                        if (!i.multi) {
+                            return `<div class="cal-event" style="${bg}" title="${tip}" onclick="calEventClick(event, '${cid}')">${esc(ev.title)}${ev.teacher ? `<span>${esc(ev.teacher)}</span>` : ''}</div>`;
+                        }
+                        if (!i.start && dow !== 1) return `<div class="cal-event multi ph">&nbsp;</div>`;
+                        let span = 1, last = i;
+                        const maxSpan = 7 - ((dow + 6) % 7);
+                        for (let j = 1; j < maxSpan; j++) {
+                            const nd = new Date(y, m - 1, d + j);
+                            const ni = rangeInfo(r, nd.getFullYear(), nd.getMonth() + 1, nd.getDate());
+                            if (!ni.inside) break;
+                            span++; last = ni;
+                        }
+                        return `<div class="cal-event multi${i.start ? '' : ' sq-l'}${last.end ? '' : ' sq-r'}" style="--n:${span};${bg}" title="${tip}" onclick="calEventClick(event, '${cid}')">${esc(ev.title)}</div>`;
+                    }).join("");
+
+                cells += `
+                    <div class="cal-cell${dt.getMonth() !== calMonth ? ' other' : ''}${isToday ? ' today' : ''}" data-d="${y}-${pad(m)}-${pad(d)}" onmousedown="calDown(event, this)" onmouseenter="calEnter(this)" onclick="calCellClick('${pad(m)}.${pad(d)}.')">
+                        <span class="cal-num">${d}</span>${chips}${dt.getDay() === 6 && !chips && dt >= todayStart ? `<button class="cal-free" onclick="openBooking(event, '${y}-${pad(m)}-${pad(d)}')">Szabad/Foglalható</button>` : ''}
+                    </div>`;
+            }
+
+            container.innerHTML = `
+                <div class="calendar">
+                    <div class="cal-head">
+                        <div class="cal-title">${MONTHS[calMonth]} ${calYear}</div>
+                        <div class="cal-controls">
+                            <button class="cal-today" onclick="goToday()">Ma</button>
+                            <button class="cal-nav" onclick="shiftMonth(-1)" aria-label="Előző hónap">‹</button>
+                            <button class="cal-nav" onclick="shiftMonth(1)" aria-label="Következő hónap">›</button>
+                        </div>
+                    </div>
+                    <div class="cal-weekdays">${WEEKDAYS.map(w => `<div>${w}</div>`).join("")}</div>
+                    <div class="cal-grid">${cells}</div>
+                </div>`;
+        }
+
+        function shiftMonth(n) {
+            const d = new Date(calYear, calMonth + n, 1);
+            calYear = d.getFullYear();
+            calMonth = d.getMonth();
+            renderApp();
+        }
+
+        function goToday() {
+            const n = new Date();
+            calYear = n.getFullYear();
+            calMonth = n.getMonth();
+            renderApp();
+        }
+
+        function toggleView() {
+            viewMode = viewMode === 'list' ? 'calendar' : 'list';
+            document.getElementById("app-content").classList.toggle("wide", viewMode === 'calendar');
+            document.getElementById("viewToggle").innerText = viewMode === 'calendar' ? '☰ Lista' : '▦ Naptár';
+            document.getElementById("bookTab").style.display = viewMode === 'calendar' ? 'none' : 'block';
+            renderApp();
+        }
+
+        function calCellClick(day) { if (isAdmin) openModal(null, day); }
+
+        let dragStartDate = null, dragEndDate = null;
+        function calDown(e, el) {
+            if (!isAdmin || e.button !== 0) return;
+            dragStartDate = dragEndDate = el.dataset.d;
+            paintSel();
+        }
+        function calEnter(el) {
+            if (!dragStartDate) return;
+            dragEndDate = el.dataset.d;
+            paintSel();
+        }
+        function paintSel() {
+            const [a, b] = [dragStartDate, dragEndDate].sort();
+            document.querySelectorAll('.cal-cell').forEach(c => c.classList.toggle('sel', !!dragStartDate && c.dataset.d >= a && c.dataset.d <= b));
+        }
+        document.addEventListener('mouseup', () => {
+            if (!dragStartDate) return;
+            const [a, b] = [dragStartDate, dragEndDate].sort();
+            dragStartDate = dragEndDate = null;
+            paintSel();
+            if (a !== b) openModal(null, a.replace(/-/g, '.') + '.', b.replace(/-/g, '.') + '.');
+        });
+        function calEventClick(e, id) { e.stopPropagation(); if (isAdmin) openModal(id); }
+
+        async function toggleAdmin() {
+            const btn = document.getElementById("adminToggle");
+            const app = document.getElementById("app-content");
+
+            if (isAdmin) {
+                isAdmin = false;
+                adminPwd = "";
+                bookings = [];
+                renderBookings();
+                btn.innerText = "Admin";
+                app.classList.remove("admin-mode");
+                renderApp();
+                return;
+            }
+
+            let pwd = prompt("Kérem az admin jelszót:");
+            if (!pwd) return;
+
+            try {
+                btn.innerText = "ELLENŐRZÉS...";
+                let response = await fetch(scriptURL + '?type=verifyAdmin&pwd=' + encodeURIComponent(pwd));
+                let result = await response.json();
+
+                if (result.success === true) {
+                    isAdmin = true;
+                    btn.innerText = "KILÉPÉS";
+                    adminPwd = pwd;
+                    loadBookings();
+                    app.classList.add("admin-mode");
+                    renderApp();
+                } else {
+                    btn.innerText = "Admin";
+                    alert("Helytelen jelszó!");
+                }
+            } catch (error) {
+                btn.innerText = "Admin";
+                alert("Hiba történt a szerverrel való kommunikáció során.");
+            }
+        }
+
+        let bookDate = "";
+        let bookFromList = false;
+        const fmtBookDate = s => { const [y, m, d] = String(s).split("-").map(Number); return `${y}. ${MONTHS[m-1].toLowerCase()} ${d}.`; };
+        const postJSON = (action, payload) => fetch(scriptURL + '?action=' + action, { method: 'POST', body: JSON.stringify(payload) }).then(r => r.json());
+
+        // Szabad szombatok a következő 52 hétre (ugyanaz a szabály, mint a naptárban a zöld buboréknál)
+        function freeSaturdays() {
+            const ranges = scheduleData.map(ev => parseEventRange(ev.day)).filter(Boolean);
+            const out = [], t = new Date();
+            const d = new Date(t.getFullYear(), t.getMonth(), t.getDate());
+            d.setDate(d.getDate() + ((6 - d.getDay() + 7) % 7));
+            for (let k = 0; k < 52; k++, d.setDate(d.getDate() + 7)) {
+                const y = d.getFullYear(), m = d.getMonth() + 1, dd = d.getDate();
+                if (!ranges.some(r => rangeInfo(r, y, m, dd).inside)) out.push(`${y}-${pad(m)}-${pad(dd)}`);
+            }
+            return out;
+        }
+
+        function openBooking(e, dateStr) {
+            e.stopPropagation();
+            bookFromList = false;
+            bookDate = dateStr;
+            document.getElementById("bookForm").reset();
+            document.getElementById("bookDate").style.display = "";
+            document.getElementById("bookDateGroup").style.display = "none";
+            document.getElementById("bookDate").innerText = fmtBookDate(dateStr) + " (szombat)";
+            document.getElementById("bookNote").innerText = "";
+            document.getElementById("bookSubmit").disabled = false;
+            document.getElementById("bookModal").classList.add("active");
+        }
+
+        function openBookingFromList() {
+            const free = freeSaturdays();
+            document.getElementById("bookDateSelect").innerHTML = free.length
+                ? free.map(s => `<option value="${s}">${fmtBookDate(s)} (szombat)</option>`).join("")
+                : '<option value="">Jelenleg nincs szabad szombat</option>';
+            bookFromList = true;
+            document.getElementById("bookForm").reset();
+            document.getElementById("bookDate").style.display = "none";
+            document.getElementById("bookDateGroup").style.display = "block";
+            document.getElementById("bookNote").innerText = "";
+            document.getElementById("bookSubmit").disabled = !free.length;
+            document.getElementById("bookModal").classList.add("active");
+        }
+
+        function closeBooking() { document.getElementById("bookModal").classList.remove("active"); }
+
+        function submitBooking(e) {
+            e.preventDefault();
+            const btn = document.getElementById("bookSubmit");
+            const note = document.getElementById("bookNote");
+            btn.disabled = true;
+            note.style.color = "var(--muted)";
+            note.innerText = "Küldés...";
+
+            postJSON('requestBooking', {
+                date: bookFromList ? document.getElementById("bookDateSelect").value : bookDate,
+                teacher: document.getElementById("bookTeacher").value.trim(),
+                title: document.getElementById("bookTitle").value.trim(),
+                email: document.getElementById("bookEmail").value.trim()
+            }).then(res => {
+                if (res.result === "success") {
+                    note.style.color = "#4ade80";
+                    note.innerText = "Köszönjük! A kérelmet elküldtük, e-mailben értesítünk a döntésről.";
+                    setTimeout(closeBooking, 3000);
+                } else {
+                    btn.disabled = false;
+                    note.style.color = "#ff5555";
+                    note.innerText = res.result === "duplicate"
+                        ? "Erre a napra ezzel az e-mail címmel már van függőben lévő kérelem."
+                        : "A kérelem nem küldhető el, ellenőrizd az adatokat.";
+                }
+            }).catch(() => {
+                btn.disabled = false;
+                note.style.color = "#ff5555";
+                note.innerText = "Hálózati hiba, próbáld újra.";
+            });
+        }
+
+        function loadBookings() {
+            if (!isAdmin) return;
+            postJSON('listBookings', { pwd: adminPwd })
+                .then(res => { if (res.result === "success") { bookings = res.bookings; renderBookings(); } })
+                .catch(() => {});
+        }
+
+        function renderBookings() {
+            document.getElementById("booking-count").innerText = bookings.length;
+            document.getElementById("booking-list").innerHTML = bookings.length
+                ? bookings.map(b => {
+                    const id = String(b.id).replace(/\D/g, "");
+                    return `
+                        <div class="booking-item">
+                            <div class="booking-info">
+                                <b>${esc(fmtBookDate(b.date))}</b><br>
+                                ${esc(b.teacher)} – ${esc(b.title)}<br>
+                                <span style="color: var(--muted);">${esc(b.email)}</span>
+                            </div>
+                            <div class="booking-btns">
+                                <button class="action-btn accept" onclick="decideBooking('${id}', 'accept')">Elfogad</button>
+                                <button class="action-btn delete" onclick="decideBooking('${id}', 'reject')">Elutasít</button>
+                            </div>
+                        </div>`;
+                }).join("")
+                : '<div style="color: var(--muted); font-size: 0.9rem;">Nincs függőben lévő kérelem.</div>';
+        }
+
+        function decideBooking(id, decision) {
+            const b = bookings.find(x => String(x.id) === id);
+            if (!b) return;
+            const verb = decision === "accept" ? "elfogadod" : "elutasítod";
+            if (!confirm(`Biztosan ${verb} a kérelmet? A(z) ${b.email} címre automatikus e-mail megy.`)) return;
+
+            const note = document.getElementById("booking-note");
+            note.style.color = "var(--muted)";
+            note.innerText = "Feldolgozás és e-mail küldése...";
+
+            postJSON('decideBooking', { pwd: adminPwd, id: id, decision: decision }).then(res => {
+                if (res.result !== "success") {
+                    note.style.color = "#ff5555";
+                    note.innerText = "Hiba: a művelet nem sikerült, az e-mail nem ment ki.";
+                    return;
+                }
+                if (decision === "accept") {
+                    const [y, m, d] = b.date.split("-");
+                    // time: "" = alapértelmezett fehér szín
+                    scheduleData.push({ id: Date.now(), day: `${y}.${m}.${d}.`, time: "", title: b.title, teacher: b.teacher });
+                    syncWithExcel();
+                }
+                bookings = bookings.filter(x => String(x.id) !== id);
+                note.style.color = "#4ade80";
+                note.innerText = decision === "accept" ? "Elfogadva, az e-mail elment." : "Elutasítva, az e-mail elment.";
+                renderBookings();
+                renderApp();
+            }).catch(() => {
+                note.style.color = "#ff5555";
+                note.innerText = "Hálózati hiba, próbáld újra.";
+            });
+        }
+
+        function toggleEndDay() {
+            const isChecked = document.getElementById("isMultiDay").checked;
+            document.getElementById("endDayGroup").style.display = isChecked ? "block" : "none";
+            
+            if (!isChecked) {
+                document.getElementById("eventEndDay").value = "";
+            }
+        }
+
+        function setColor(c) {
+            const val = (c || '').toLowerCase() === '#ffffff' ? '' : (c || '');
+            document.getElementById('eventColor').value = val;
+            document.querySelectorAll('.color-swatch').forEach(s => s.classList.toggle('active', s.dataset.c === (val || '#ffffff')));
+        }
+
+        function openModal(id = null, presetDay = "", presetEnd = "") {
+            const modal = document.getElementById("editModal");
+            const title = document.getElementById("modalTitle");
+
+            if (id) {
+                const ev = scheduleData.find(e => String(e.id) === String(id));
+                if (!ev) return;
+                document.getElementById("eventId").value = ev.id;
+
+                const [evStart, evEnd] = splitDay(ev.day);
+                document.getElementById("eventDay").value = editDate(evStart);
+                document.getElementById("eventEndDay").value = evEnd ? editDate(evEnd) : "";
+                document.getElementById("eventTitle").value = ev.title;
+                document.getElementById("eventTeacher").value = ev.teacher || "";
+                title.innerText = "Szerkesztés";
+                setColor(evColor(ev));
+
+                document.getElementById("isMultiDay").checked = !!evEnd;
+                toggleEndDay();
+            } else {
+                document.getElementById("programForm").reset();
+                document.getElementById("eventId").value = "";
+                if (presetDay) document.getElementById("eventDay").value = presetDay;
+                if (presetEnd) document.getElementById("eventEndDay").value = presetEnd;
+                title.innerText = "Új Program";
+                setColor('');
+
+                document.getElementById("isMultiDay").checked = !!presetEnd;
+                toggleEndDay();
+            }
+            modal.classList.add("active");
+        }
+
+        function closeModal() {
+            document.getElementById("editModal").classList.remove("active");
+        }
+
+        function saveEvent(e) {
+            e.preventDefault();
+            const endV = document.getElementById("eventEndDay").value.trim();
+            if (endV && !parseEventDate(endV)) { alert("Az utolsó nap formátuma: Hónap.Nap. (pl. 10.14.)"); return; }
+            const rr = parseEventRange(buildDayValue());
+            if (endV && rr && rr.y1 !== null && rr.y2 * 10000 + rr.m2 * 100 + rr.d2 < rr.y1 * 10000 + rr.m1 * 100 + rr.d1) {
+                alert("Az utolsó nap nem lehet korábbi, mint az első."); return;
+            }
+            const id = document.getElementById("eventId").value;
+            const index = id ? scheduleData.findIndex(ev => String(ev.id) === id) : -1;
+            const newEvent = {
+                id: index > -1 ? scheduleData[index].id : Date.now(),
+                day: buildDayValue(),
+                time: document.getElementById("eventColor").value,
+                title: document.getElementById("eventTitle").value,
+                teacher: document.getElementById("eventTeacher").value
+            };
+
+            if (index > -1) {
+                scheduleData[index] = newEvent;
+            } else {
+                scheduleData.push(newEvent);
+            }
+
+            closeModal();
+            renderApp();
+            syncWithExcel();
+        }
+
+        function deleteEvent(id) {
+            if (confirm("Biztosan törölni szeretnéd ezt a programot?")) {
+                scheduleData = scheduleData.filter(e => String(e.id) !== String(id));
+                renderApp();
+                syncWithExcel();
+            }
+        }
+
+        // Sorrend módosítása fel/le nyilakkal
+        function moveEvent(id, dir) {
+            const i = scheduleData.findIndex(e => String(e.id) === String(id));
+            const j = i + dir;
+            if (i < 0 || j < 0 || j >= scheduleData.length) return;
+            [scheduleData[i], scheduleData[j]] = [scheduleData[j], scheduleData[i]];
+            renderApp();
+            syncWithExcel();
+        }
+
+        // Mentés közben (és utána 3 mp-ig) az automatikus frissítés nem írhatja felül a helyi állapotot
+        let saveLock = false, saveTimer = null;
+        function syncWithExcel() {
+            const status = document.getElementById("sync-status");
+            saveLock = true;
+            clearTimeout(saveTimer);
+            status.innerText = "Mentés...";
+            status.style.opacity = "1";
+            const unlock = () => { saveTimer = setTimeout(() => { saveLock = false; }, 3000); };
+
+            fetch(scriptURL + '?action=saveProgram', {
+                method: 'POST',
+                body: JSON.stringify(scheduleData)
+            })
+            .then(response => response.json())
+            .then(result => {
+                status.innerText = result.result === "success" ? "Mentve" : "Hiba a mentésnél";
+                setTimeout(() => { status.style.opacity = "0"; }, 2000);
+                unlock();
+            })
+            .catch(error => {
+                status.innerText = "Hálózati hiba";
+                setTimeout(() => { status.style.opacity = "0"; }, 2000);
+                unlock();
+            });
+        }
+
+        document.getElementById('colorPicker').innerHTML = PALETTE.map(c =>
+            `<button type="button" class="color-swatch" data-c="${c}" style="background:${c}" onclick="setColor('${c}')" aria-label="${c}"></button>`).join('');
+        setColor('');
+
+        checkIpAndShowAdminButton();
+        fetchSchedule();
+
+        setInterval(() => {
+            if (saveLock || document.getElementById("editModal").classList.contains("active")) return;
+
+            if (isAdmin) loadBookings();
+
+            fetch(scriptURL + '?type=program')
+                .then(response => response.json())
+                .then(data => {
+                    if (saveLock) return;
+                    if (JSON.stringify(data) !== JSON.stringify(scheduleData)) {
+                        scheduleData = data;
+                        renderApp();
+                    }
+                });
+        }, 10000);
+    </script>
+</body>
+</html>
