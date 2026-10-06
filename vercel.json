@@ -17,6 +17,14 @@
       "destination": "/obgyifi/szolgalat.html"
     },
     {
+      "source": "/obgyifi/program",
+      "destination": "/obgyifi/program.html"
+    },
+    {
+      "source": "/obgyifi/program/",
+      "destination": "/obgyifi/program.html"
+    },
+    {
       "source": "/obgyifi/fiukor/projekt",
       "destination": "/obgyifi/fiukor/projekt.html"
     },
